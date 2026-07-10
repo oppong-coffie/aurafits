@@ -39,6 +39,7 @@ export default function Navbar({ activeUser, logoutAction }: NavbarProps) {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const [cartCount, setCartCount] = useState<number>(0);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   const fetchCartCount = async () => {
     if (!activeUser) {
@@ -87,11 +88,14 @@ export default function Navbar({ activeUser, logoutAction }: NavbarProps) {
     }
   };
 
-  // Close dropdown menu if clicking outside
+  // Close dropdown menus if clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsOpen(false);
+      }
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsMenuOpen(false);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
@@ -101,13 +105,10 @@ export default function Navbar({ activeUser, logoutAction }: NavbarProps) {
   return (
     <nav className="flex justify-between items-center px-6 py-4 md:px-12 border-b border-zinc-200 dark:border-zinc-800/80 bg-white/80 dark:bg-zinc-950/85 backdrop-blur-md sticky top-0 z-50 transition-colors duration-200">
       <div className="flex items-center gap-4">
-        {/* Menu Icon with Hover Dropdown */}
-        <div 
-          className="relative"
-          onMouseEnter={() => setIsMenuOpen(true)}
-          onMouseLeave={() => setIsMenuOpen(false)}
-        >
+        {/* Menu Icon with Click Dropdown */}
+        <div className="relative" ref={menuRef}>
           <button 
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="p-2 text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-900 rounded-xl transition-colors duration-150 cursor-pointer"
             aria-label="Categories Menu"
           >

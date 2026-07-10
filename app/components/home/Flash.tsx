@@ -104,21 +104,21 @@ export default function FlashSales({ products = [] }: FlashSalesProps) {
       <div className="max-w-[1600px] mx-auto flex flex-col gap-8">
         
         {/* Banner Top Info Card */}
-        <div className="w-full bg-gradient-to-r from-yellow-500 to-yellow-500 dark:from-violet-900/60 dark:to-indigo-950/60 text-white rounded-3xl p-3 md:p-4 flex flex-col md:flex-row justify-between items-center gap-6">
+        <div className="w-full bg-gradient-to-r from-yellow-500 to-yellow-500 dark:from-violet-900/60 dark:to-indigo-950/60 text-white rounded-3xl p-3 md:p-4 flex md:flex-row justify-between items-center gap-6">
           <div className="text-center md:text-left">
             <span className="text-[10px] font-bold uppercase tracking-widest bg-red-500 px-3 py-1 rounded-full inline-block">
               Flash Deal
             </span>
-            <h2 className="text-2xl md:text-2xl font-extrabold tracking-tight leading-tight">
+            <h2 className="text-lg md:text-2xl font-extrabold tracking-tight leading-tight">
               Low Sales
             </h2>
           </div>
 
-          <div className="flex flex-col items-center md:items-end shrink-0">
+          <div className="flex flex-col items-end shrink-0">
             <span className="text-[10px] font-bold uppercase tracking-widest text-red-500 dark:text-red-400 block mb-2 font-mono">
               Ending In
             </span>
-            <div className="flex items-center gap-2 font-mono font-bold text-xl md:text-2xl">
+            <div className="flex items-center gap-2 font-mono font-bold text-lg md:text-2xl">
               <span className="bg-white/10 px-3 py-1.5 rounded-xl border border-white/10 text-red-500">
                 {String(countdown.hours).padStart(2, '0')}
               </span>
@@ -169,8 +169,8 @@ export default function FlashSales({ products = [] }: FlashSalesProps) {
                     {prod.discount}
                   </motion.span>
 
-                  {/* Quick Add Overlay */}
-                  <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center p-4">
+                  {/* Static Add to Cart Overlay */}
+                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent flex items-end justify-center p-4 pt-12 z-10">
                     <button 
                       onClick={() => handleAddToCart(prod.id)}
                       disabled={addingId === prod.id}
@@ -183,7 +183,7 @@ export default function FlashSales({ products = [] }: FlashSalesProps) {
 
                 {/* Product Info */}
                 <div className="px-1">
-                  <span className="text-[10px] font-bold text-zinc-400 dark:text-zinc-505 uppercase tracking-widest block">
+                  <span className="text-[10px] font-bold text-zinc-400 dark:text-zinc-550 uppercase tracking-widest block">
                     {prod.category === 'active-wear' ? "Active Wear" : prod.category === 'travel-set' ? "Travel Set" : prod.category === 'lounge-wear' ? "Lounge Wear" : "Foot Wear"}
                   </span>
                   <h3 className="font-bold text-base md:text-lg hover:text-pink-500 text-zinc-900 dark:text-zinc-50 mt-1 leading-snug">

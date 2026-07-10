@@ -93,12 +93,12 @@ export default function Featured({ products = [] }: FeaturedProps) {
                     {prod.badge}
                   </span>
 
-                  {/* Quick Add Overlay */}
-                  <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center p-4">
+                  {/* Static Add to Cart Overlay */}
+                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent flex items-end justify-center p-4 pt-12 z-10">
                     <button 
                       onClick={() => handleAddToCart(prod.id)}
                       disabled={addingId === prod.id}
-                      className="w-full bg-white hover:bg-zinc-100 disabled:bg-zinc-200 disabled:text-zinc-400 text-zinc-900 font-bold text-xs py-3.5 rounded-2xl transition duration-150 shadow-lg text-center cursor-pointer"
+                      className="w-full bg-pink-500 hover:bg-pink-600 disabled:bg-zinc-200 disabled:text-zinc-400 text-white font-bold text-xs py-3.5 rounded-2xl transition duration-150 shadow-lg text-center cursor-pointer"
                     >
                       {addingId === prod.id ? "Adding..." : "Add to Cart"}
                     </button>

@@ -102,13 +102,13 @@ export default function Sponsored({ products = [] }: SponsoredProps) {
                   <span className="absolute top-4 left-4 bg-zinc-900/85 dark:bg-zinc-50/85 text-white dark:text-zinc-900 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-md">
                     Sponsored
                   </span>
-                  
-                  {/* Quick Add Overlay */}
-                  <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center p-4">
+
+                  {/* Static Add to Cart Overlay */}
+                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent flex items-end justify-center p-4 pt-12 z-10">
                     <button 
                       onClick={() => handleAddToCart(item.id)}
                       disabled={addingId === item.id}
-                      className="w-full bg-white hover:bg-zinc-100 disabled:bg-zinc-200 disabled:text-zinc-400 text-zinc-900 font-bold text-xs py-3.5 rounded-2xl transition duration-150 shadow-lg text-center cursor-pointer"
+                      className="w-full bg-pink-500 hover:bg-pink-600 disabled:bg-zinc-200 disabled:text-zinc-400 text-white font-bold text-xs py-3.5 rounded-2xl transition duration-150 shadow-lg text-center cursor-pointer"
                     >
                       {addingId === item.id ? "Adding..." : "Add to Cart"}
                     </button>

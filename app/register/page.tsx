@@ -12,6 +12,7 @@ export default function RegisterPage() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
+  const [address, setAddress] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   
@@ -30,7 +31,7 @@ export default function RegisterPage() {
       const response = await fetch('/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, phone, password }),
+        body: JSON.stringify({ name, email, phone, address, password }),
       });
 
       const data = await response.json();
@@ -142,6 +143,30 @@ export default function RegisterPage() {
                   className="text-[11px] text-red-550 dark:text-red-400 font-semibold flex items-center gap-1 mt-1 overflow-hidden"
                 >
                   ⚠️ {errors.phone[0]}
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </div>
+
+          <div className="flex flex-col gap-1.5">
+            <label className="text-[10px] font-bold text-zinc-450 dark:text-zinc-500 uppercase tracking-wider" htmlFor="register-address">Delivery Address</label>
+            <input
+              id="register-address"
+              type="text"
+              className="w-full bg-slate-50 dark:bg-zinc-955 border border-zinc-200 dark:border-zinc-800 focus:ring-2 focus:ring-violet-500/25 focus:border-violet-500 rounded-2xl px-4 py-3 text-xs text-zinc-900 dark:text-zinc-50 outline-none transition duration-150"
+              placeholder="123 Ring Road, Accra, Ghana"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              required
+            />
+            <AnimatePresence>
+              {errors.address && (
+                <motion.span 
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  className="text-[11px] text-red-550 dark:text-red-400 font-semibold flex items-center gap-1 mt-1 overflow-hidden"
+                >
+                  ⚠️ {errors.address[0]}
                 </motion.span>
               )}
             </AnimatePresence>

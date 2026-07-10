@@ -9,6 +9,7 @@ const RegisterSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters long').max(50),
   email: z.string().email('Please enter a valid email address'),
   phone: z.string().min(7, 'Phone number must be at least 7 characters long').max(20),
+  address: z.string().min(5, 'Address must be at least 5 characters long').max(200),
   password: z.string().min(4, 'Password must be at least 4 characters long'),
 });
 
@@ -34,7 +35,7 @@ export async function register(request: Request) {
       );
     }
     
-    const { name, email, phone, password } = result.data;
+    const { name, email, phone, address, password } = result.data;
     
     // Check if email already exists (using Mongoose query)
     const existingUser = await User.findOne({ email });
@@ -56,6 +57,7 @@ export async function register(request: Request) {
       name,
       email,
       phone,
+      address,
       passwordHash,
     });
     
@@ -70,6 +72,7 @@ export async function register(request: Request) {
           name: user.name,
           email: user.email,
           phone: user.phone,
+          address: user.address,
         },
       },
       { status: 201 }

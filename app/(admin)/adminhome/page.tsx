@@ -293,30 +293,59 @@ export default function AdminDashboardHome() {
                                 {!isAccepted ? (
                                   <motion.button
                                     animate={{
-                                      x: [-1.5, 1.5, -1.5, 1.5, 0]
+                                      scale: [1, 1.02, 1],
+                                      boxShadow: [
+                                        "0 0 0 0px rgba(99, 102, 241, 0)",
+                                        "0 0 0 6px rgba(99, 102, 241, 0.25)",
+                                        "0 0 0 0px rgba(99, 102, 241, 0)"
+                                      ]
                                     }}
                                     transition={{
                                       repeat: Infinity,
-                                      duration: 0.5,
+                                      duration: 1.5,
                                       ease: "easeInOut"
                                     }}
                                     onClick={() => handleUpdateOrderStatus(ord.id, 'accepted')}
-                                    className="px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-650 dark:bg-indigo-950/20 dark:hover:bg-indigo-900/35 dark:text-indigo-400 font-bold text-[10px] rounded-xl transition duration-150 cursor-pointer text-center"
+                                    className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-[10px] rounded-xl transition duration-150 cursor-pointer text-center shadow-sm"
                                   >
                                     Accept Order
                                   </motion.button>
                                 ) : (
-                                  <span className="px-3 py-1.5 text-emerald-600 dark:text-emerald-450 font-bold text-[10px] flex items-center gap-1 select-none">
+                                  <span className="px-3 py-1.5 text-emerald-600 dark:text-emerald-455 font-bold text-[10px] flex items-center gap-1 select-none">
                                     <CheckCircle2 size={12} className="fill-current" />
                                     <span>Accepted</span>
                                   </span>
                                 )}
-                                <button
-                                  onClick={() => handleUpdateOrderStatus(ord.id, 'completed')}
-                                  className="px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-650 dark:bg-emerald-950/20 dark:hover:bg-emerald-900/35 dark:text-emerald-450 font-bold text-[10px] rounded-xl transition duration-150 cursor-pointer text-center"
-                                >
-                                  Completed Order
-                                </button>
+                                
+                                {isAccepted ? (
+                                  <motion.button
+                                    animate={{
+                                      scale: [1, 1.02, 1],
+                                      boxShadow: [
+                                        "0 0 0 0px rgba(16, 185, 129, 0)",
+                                        "0 0 0 6px rgba(16, 185, 129, 0.25)",
+                                        "0 0 0 0px rgba(16, 185, 129, 0)"
+                                      ]
+                                    }}
+                                    transition={{
+                                      repeat: Infinity,
+                                      duration: 1.5,
+                                      ease: "easeInOut"
+                                    }}
+                                    onClick={() => handleUpdateOrderStatus(ord.id, 'completed')}
+                                    className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[10px] rounded-xl transition duration-150 cursor-pointer text-center shadow-sm"
+                                  >
+                                    Complete Order
+                                  </motion.button>
+                                ) : (
+                                  <button
+                                    onClick={() => handleUpdateOrderStatus(ord.id, 'completed')}
+                                    className="px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-650 dark:bg-emerald-955/20 dark:hover:bg-emerald-900/35 dark:text-emerald-450 font-bold text-[10px] rounded-xl transition duration-150 cursor-pointer text-center"
+                                  >
+                                    Complete Order
+                                  </button>
+                                )}
+
                                 <button
                                   onClick={() => handleUpdateOrderStatus(ord.id, 'cancelled')}
                                   className="px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-650 border border-zinc-200/20 dark:bg-rose-950/20 dark:hover:bg-rose-900/35 dark:text-rose-455 font-bold text-[10px] rounded-xl transition duration-150 cursor-pointer text-center"
@@ -394,15 +423,20 @@ export default function AdminDashboardHome() {
                             <div className="flex gap-2">
                               <motion.button 
                                 animate={{
-                                  x: [-1.5, 1.5, -1.5, 1.5, 0]
+                                  scale: [1, 1.02, 1],
+                                  boxShadow: [
+                                    "0 0 0 0px rgba(99, 102, 241, 0)",
+                                    "0 0 0 6px rgba(99, 102, 241, 0.25)",
+                                    "0 0 0 0px rgba(99, 102, 241, 0)"
+                                  ]
                                 }}
                                 transition={{
                                   repeat: Infinity,
-                                  duration: 0.5,
+                                  duration: 1.5,
                                   ease: "easeInOut"
                                 }}
                                 onClick={() => handleUpdateOrderStatus(ord.id, 'accepted')}
-                                className="flex-1 bg-indigo-550 hover:bg-indigo-650 text-white font-bold text-[10px] py-2 rounded-xl transition duration-150 shadow-sm cursor-pointer text-center"
+                                className="flex-1 bg-indigo-550 hover:bg-indigo-655 text-white font-bold text-[10px] py-2 rounded-xl transition duration-150 shadow-sm cursor-pointer text-center"
                               >
                                 Accept Order
                               </motion.button>
@@ -410,21 +444,34 @@ export default function AdminDashboardHome() {
                                 onClick={() => handleUpdateOrderStatus(ord.id, 'completed')}
                                 className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[10px] py-2 rounded-xl transition duration-150 shadow-sm cursor-pointer text-center"
                               >
-                                Completed Order
+                                Complete Order
                               </button>
                             </div>
                           ) : (
                             <div className="flex gap-2">
-                              <span className="flex-1 border border-emerald-500/20 bg-emerald-800/10 text-emerald-650 dark:text-emerald-450 font-bold text-[10px] py-2 rounded-xl flex items-center justify-center gap-1 select-none">
+                              <span className="flex-1 border border-emerald-500/20 bg-emerald-800/10 text-emerald-655 dark:text-emerald-450 font-bold text-[10px] py-2 rounded-xl flex items-center justify-center gap-1 select-none">
                                 <CheckCircle2 size={12} className="fill-current" />
                                 <span>Accepted</span>
                               </span>
-                              <button 
+                              <motion.button 
+                                animate={{
+                                  scale: [1, 1.02, 1],
+                                  boxShadow: [
+                                    "0 0 0 0px rgba(16, 185, 129, 0)",
+                                    "0 0 0 6px rgba(16, 185, 129, 0.25)",
+                                    "0 0 0 0px rgba(16, 185, 129, 0)"
+                                  ]
+                                }}
+                                transition={{
+                                  repeat: Infinity,
+                                  duration: 1.5,
+                                  ease: "easeInOut"
+                                }}
                                 onClick={() => handleUpdateOrderStatus(ord.id, 'completed')}
                                 className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[10px] py-2 rounded-xl transition duration-150 shadow-sm cursor-pointer text-center"
                               >
                                 Complete Order
-                              </button>
+                              </motion.button>
                             </div>
                           )}
                           <button 

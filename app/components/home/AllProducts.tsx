@@ -133,12 +133,12 @@ export default function AllProducts({ products = [] }: AllProductsProps) {
                         </span>
                       )}
 
-                      {/* Quick Add Overlay */}
-                      <div className="absolute inset-0 bg-black/25 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center p-4">
+                      {/* Static Add to Cart Overlay */}
+                      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent flex items-end justify-center p-3 pt-10 z-10">
                         <button 
                           onClick={() => handleAddToCart(prod.id)}
                           disabled={addingId === prod.id}
-                          className="flex items-center justify-center gap-1.5 bg-white hover:bg-zinc-100 disabled:bg-zinc-200 disabled:text-zinc-400 text-zinc-900 font-bold text-xs py-3 px-5 rounded-2xl transition duration-150 shadow-lg cursor-pointer"
+                          className="w-full bg-pink-500 hover:bg-pink-650 disabled:bg-zinc-200 disabled:text-zinc-400 text-white font-bold text-xs py-3 rounded-2xl transition duration-150 shadow-md flex items-center justify-center gap-1.5 cursor-pointer"
                         >
                           <ShoppingBag size={14} />
                           <span>{addingId === prod.id ? "Adding..." : "Add to Cart"}</span>

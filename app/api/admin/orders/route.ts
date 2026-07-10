@@ -4,6 +4,7 @@ import dbConnect from '@/app/lib/mongodb';
 import { Cart } from '@/models/Cart';
 import { Product } from '@/models/Product';
 import { User } from '@/models/User';
+import { sendSMS } from '@/app/lib/sms';
 
 export const dynamic = 'force-dynamic';
 
@@ -89,17 +90,40 @@ export async function PATCH(request: Request) {
 
     await dbConnect();
     
-    const updated = await Cart.findByIdAndUpdate(
-      itemId, 
-      { status }, 
-      { new: true }
-    );
-
-    if (!updated) {
+    // Load details of the order item
+    const cartItem = await Cart.findById(itemId).populate({ path: 'productId', model: Product });
+    if (!cartItem) {
       return NextResponse.json({ success: false, message: 'Item not found' }, { status: 404 });
     }
 
-    return NextResponse.json({ success: true, cartItem: updated });
+    cartItem.status = status;
+    await cartItem.save();
+
+    // Fetch the customer profile who placed the order
+    const customer = await User.findById(cartItem.userId);
+
+    // Send SMS alert on status change if customer has phone
+    if (customer && customer.phone) {
+      try {
+        const prodName = cartItem.productId?.name || 'Staple Item';
+        let smsText = '';
+        if (status === 'accepted') {
+          smsText = `Hi ${customer.name}, your AuraFits order for "${prodName}" has been accepted and is now in transit/processing!`;
+        } else if (status === 'completed') {
+          smsText = `Hi ${customer.name}, your AuraFits order for "${prodName}" has been completed/delivered! Thank you for shopping with us!`;
+        } else if (status === 'cancelled') {
+          smsText = `Hi ${customer.name}, your AuraFits order for "${prodName}" has been rejected/cancelled.`;
+        }
+
+        if (smsText) {
+          await sendSMS(customer.phone, smsText);
+        }
+      } catch (smsErr) {
+        console.error('Status Update SMS dispatch failed:', smsErr);
+      }
+    }
+
+    return NextResponse.json({ success: true, cartItem });
   } catch (err: any) {
     console.error('PATCH /api/admin/orders error:', err);
     return NextResponse.json({ success: false, message: err.message }, { status: 500 });

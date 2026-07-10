@@ -348,14 +348,17 @@ export default function OrdersContent({ items = [] }: OrdersContentProps) {
                     return (
                       <div key={idx} className="flex flex-col items-center text-center flex-1 max-w-[25%] px-1">
                         {/* Step Indicator Dot */}
-                        <div className={`w-9 h-9 rounded-full flex items-center justify-center border font-bold text-xs transition duration-300 shrink-0 mb-2 bg-white dark:bg-zinc-900 ${
+                        <div className={`relative w-9 h-9 rounded-full flex items-center justify-center border font-bold text-xs transition duration-300 shrink-0 mb-2 ${
                           isCompleted 
                             ? 'bg-pink-500 border-pink-500 text-white shadow-sm' 
                             : isActive 
-                              ? 'border-pink-500 text-pink-500 shadow-md ring-4 ring-pink-500/10' 
-                              : 'border-zinc-200 dark:border-zinc-800 text-zinc-400 dark:text-zinc-600'
+                              ? 'bg-pink-500 border-pink-500 text-white shadow-md' 
+                              : 'border-zinc-200 dark:border-zinc-800 text-zinc-400 dark:text-zinc-600 bg-white dark:bg-zinc-900'
                         }`}>
-                          {isCompleted ? "✓" : stepNumber}
+                          {isActive && (
+                            <span className="absolute -inset-1 rounded-full bg-pink-500/35 animate-ping z-0" />
+                          )}
+                          <span className="relative z-10">{isCompleted ? "✓" : stepNumber}</span>
                         </div>
                         
                         {/* Step Text Info */}
