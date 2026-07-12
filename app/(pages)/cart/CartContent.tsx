@@ -21,6 +21,8 @@ interface Product {
   category: string;
   image?: string;
   type?: string;
+  colors?: string[];
+  sizes?: string[];
 }
 
 interface CartItem {
@@ -28,6 +30,8 @@ interface CartItem {
   userId: string;
   productId: Product;
   quantity: number;
+  size?: string;
+  color?: string;
   createdAt: string;
 }
 
@@ -43,7 +47,7 @@ export default function CartContent({ initialItems = [] }: CartContentProps) {
   const [isCheckoutLoading, setIsCheckoutLoading] = useState(false);
 
   // Update quantity handler
-  const handleUpdateQuantity = async (productId: string, currentQty: number, delta: number) => {
+  const handleUpdateQuantity = async (productId: string, currentQty: number, delta: number, size?: string, color?: string) => {
     const newQty = currentQty + delta;
     if (newQty < 1) return;
 
@@ -54,13 +58,13 @@ export default function CartContent({ initialItems = [] }: CartContentProps) {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ productId, quantity: newQty }),
+        body: JSON.stringify({ productId, quantity: newQty, size, color }),
       });
       const data = await res.json();
       if (data.success) {
         setItems(prev => 
           prev.map(item => 
-            item.productId._id === productId 
+            item.productId._id === productId && item.size === size && item.color === color
               ? { ...item, quantity: newQty } 
               : item
           )
@@ -76,6 +80,53 @@ export default function CartContent({ initialItems = [] }: CartContentProps) {
     }
   };
 
+  // Update options (size/color) handler
+  const handleUpdateOptions = async (cartItemId: string, newSize?: string, newColor?: string) => {
+    setUpdatingId(cartItemId);
+    try {
+      const res = await fetch('/api/cart', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ cartItemId, size: newSize, color: newColor }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        if (data.merged) {
+          setItems(prev => {
+            const remaining = prev.filter(item => item._id !== data.deletedId);
+            return remaining.map(item => 
+              item._id === data.updatedItem._id 
+                ? { ...item, quantity: data.updatedItem.quantity } 
+                : item
+            );
+          });
+        } else if (data.cartItem) {
+          setItems(prev => 
+            prev.map(item => 
+              item._id === cartItemId 
+                ? { ...item, size: data.cartItem.size, color: data.cartItem.color } 
+                : item
+            )
+          );
+        }
+        window.dispatchEvent(new CustomEvent('cart-updated'));
+        window.dispatchEvent(new CustomEvent('show-toast', {
+          detail: { message: 'Item options updated.', type: 'success' }
+        }));
+      } else {
+        window.dispatchEvent(new CustomEvent('show-toast', {
+          detail: { message: data.message || 'Failed to update options.', type: 'error' }
+        }));
+      }
+    } catch (err) {
+      console.error('Update options error:', err);
+    } finally {
+      setUpdatingId(null);
+    }
+  };
+
   const promptRemoveItem = (item: CartItem) => {
     setItemToRemove(item);
     setShowRemoveModal(true);
@@ -84,6 +135,8 @@ export default function CartContent({ initialItems = [] }: CartContentProps) {
   const handleAddToWishlist = async () => {
     if (!itemToRemove) return;
     const productId = itemToRemove.productId._id;
+    const size = itemToRemove.size;
+    const color = itemToRemove.color;
     setUpdatingId(productId);
     setShowRemoveModal(false);
     try {
@@ -92,11 +145,11 @@ export default function CartContent({ initialItems = [] }: CartContentProps) {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ productId, status: 'wish' }),
+        body: JSON.stringify({ productId, status: 'wish', size, color }),
       });
       const data = await res.json();
       if (data.success) {
-        setItems(prev => prev.filter(item => item.productId._id !== productId));
+        setItems(prev => prev.filter(item => !(item.productId._id === productId && item.size === size && item.color === color)));
         window.dispatchEvent(new CustomEvent('cart-updated'));
       } else {
         alert(data.message || 'Failed to add to wishlist.');
@@ -112,15 +165,17 @@ export default function CartContent({ initialItems = [] }: CartContentProps) {
   const handleConfirmDelete = async () => {
     if (!itemToRemove) return;
     const productId = itemToRemove.productId._id;
+    const size = itemToRemove.size;
+    const color = itemToRemove.color;
     setUpdatingId(productId);
     setShowRemoveModal(false);
     try {
-      const res = await fetch(`/api/cart?productId=${productId}&status=pending`, {
+      const res = await fetch(`/api/cart?productId=${productId}&status=pending&size=${encodeURIComponent(size || '')}&color=${encodeURIComponent(color || '')}`, {
         method: 'DELETE',
       });
       const data = await res.json();
       if (data.success) {
-        setItems(prev => prev.filter(item => item.productId._id !== productId));
+        setItems(prev => prev.filter(item => !(item.productId._id === productId && item.size === size && item.color === color)));
         window.dispatchEvent(new CustomEvent('cart-updated'));
       } else {
         alert(data.message || 'Failed to remove item.');
@@ -230,9 +285,61 @@ export default function CartContent({ initialItems = [] }: CartContentProps) {
                             <h3 className="font-bold text-base md:text-lg text-zinc-900 dark:text-zinc-50 mt-0.5">
                               {p.name}
                             </h3>
-                            <p className="text-xs text-zinc-450 dark:text-zinc-400 font-medium">
-                              Type: {p.type ? p.type.toUpperCase() : 'STAPLE'}
-                            </p>
+                            <div className="flex flex-col gap-2 mt-2 select-none">
+                              <p className="text-[11px] text-zinc-400 dark:text-zinc-500">
+                                Type: <span className="font-semibold text-zinc-700 dark:text-zinc-350">{p.type ? p.type.toUpperCase() : 'STAPLE'}</span>
+                              </p>
+                              
+                              <div className="flex flex-wrap items-center gap-3">
+                                {/* Size Selector */}
+                                {p.sizes && p.sizes.length > 0 ? (
+                                  <div className="flex items-center gap-1.5 bg-zinc-550/5 dark:bg-zinc-950/40 px-2.5 py-1 rounded-xl border border-zinc-200 dark:border-zinc-800 transition duration-150 focus-within:ring-1 focus-within:ring-violet-500">
+                                    <span className="text-[9px] font-extrabold text-violet-600 dark:text-violet-400 uppercase tracking-wider">Size:</span>
+                                    <select
+                                      value={item.size || ''}
+                                      onChange={(e) => handleUpdateOptions(item._id, e.target.value, item.color)}
+                                      disabled={isUpdating}
+                                      className="bg-transparent text-zinc-800 dark:text-zinc-200 text-xs font-bold outline-none cursor-pointer pr-1"
+                                    >
+                                      {!item.size && <option value="" className="bg-white dark:bg-zinc-900">Select</option>}
+                                      {p.sizes.map((size) => (
+                                        <option key={size} value={size} className="bg-white dark:bg-zinc-900 text-zinc-850 dark:text-zinc-200">
+                                          {size}
+                                        </option>
+                                      ))}
+                                    </select>
+                                  </div>
+                                ) : item.size ? (
+                                  <div className="bg-zinc-550/5 dark:bg-zinc-950/40 px-2.5 py-1 rounded-xl border border-zinc-200 dark:border-zinc-800">
+                                    <span className="text-[9px] font-extrabold text-violet-600 dark:text-violet-400 uppercase tracking-wider">Size: {item.size}</span>
+                                  </div>
+                                ) : null}
+
+                                {/* Color Selector */}
+                                {p.colors && p.colors.length > 0 ? (
+                                  <div className="flex items-center gap-1.5 bg-zinc-550/5 dark:bg-zinc-950/40 px-2.5 py-1 rounded-xl border border-zinc-200 dark:border-zinc-800 transition duration-150 focus-within:ring-1 focus-within:ring-pink-500">
+                                    <span className="text-[9px] font-extrabold text-pink-600 dark:text-pink-400 uppercase tracking-wider">Color:</span>
+                                    <select
+                                      value={item.color || ''}
+                                      onChange={(e) => handleUpdateOptions(item._id, item.size, e.target.value)}
+                                      disabled={isUpdating}
+                                      className="bg-transparent text-zinc-800 dark:text-zinc-200 text-xs font-bold outline-none cursor-pointer pr-1"
+                                    >
+                                      {!item.color && <option value="" className="bg-white dark:bg-zinc-900">Select</option>}
+                                      {p.colors.map((color) => (
+                                        <option key={color} value={color} className="bg-white dark:bg-zinc-900 text-zinc-850 dark:text-zinc-200">
+                                          {color}
+                                        </option>
+                                      ))}
+                                    </select>
+                                  </div>
+                                ) : item.color ? (
+                                  <div className="bg-zinc-550/5 dark:bg-zinc-950/40 px-2.5 py-1 rounded-xl border border-zinc-200 dark:border-zinc-800">
+                                    <span className="text-[9px] font-extrabold text-pink-600 dark:text-pink-400 uppercase tracking-wider">Color: {item.color}</span>
+                                  </div>
+                                ) : null}
+                              </div>
+                            </div>
                           </div>
                           
                           {/* Price */}
@@ -247,7 +354,7 @@ export default function CartContent({ initialItems = [] }: CartContentProps) {
                         {/* Quantity Controls */}
                         <div className="flex items-center bg-zinc-100 dark:bg-zinc-900 px-3 py-1.5 rounded-2xl border border-zinc-200/35 dark:border-zinc-800/40 select-none">
                           <button 
-                            onClick={() => handleUpdateQuantity(p._id, item.quantity, -1)}
+                            onClick={() => handleUpdateQuantity(p._id, item.quantity, -1, item.size, item.color)}
                             disabled={item.quantity <= 1 || isUpdating}
                             className="p-1 hover:text-zinc-900 dark:hover:text-zinc-50 text-zinc-400 disabled:text-zinc-300 dark:disabled:text-zinc-700 transition duration-150 cursor-pointer"
                             aria-label="Decrease Quantity"
@@ -260,7 +367,7 @@ export default function CartContent({ initialItems = [] }: CartContentProps) {
                           </span>
 
                           <button 
-                            onClick={() => handleUpdateQuantity(p._id, item.quantity, 1)}
+                            onClick={() => handleUpdateQuantity(p._id, item.quantity, 1, item.size, item.color)}
                             disabled={isUpdating}
                             className="p-1 hover:text-zinc-900 dark:hover:text-zinc-50 text-zinc-400 transition duration-150 cursor-pointer"
                             aria-label="Increase Quantity"

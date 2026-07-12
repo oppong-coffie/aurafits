@@ -46,6 +46,8 @@ export async function GET() {
         totalValue: p.price * item.quantity,
         quantity: item.quantity,
         price: p.price,
+        size: item.size || null,
+        color: item.color || null,
         date: new Date(item.createdAt).toLocaleString(),
         status: item.status
       };

@@ -33,21 +33,31 @@ export default function FlashSales({ products = [] }: FlashSalesProps) {
       rating: p.rating || 4.8,
       description: "Exclusive flash sale product offer.",
       category: p.category,
-      image: p.image || `/flash${(i % 3) + 1}.jpg`
+      image: p.image || `/flash${(i % 3) + 1}.jpg`,
+      colors: p.colors || [],
+      sizes: p.sizes || [],
+      status: p.status || 'In Stock',
     };
   });
 
   const [addingId, setAddingId] = React.useState<string | null>(null);
 
-  const handleAddToCart = async (productId: string) => {
-    setAddingId(productId);
+  const handleAddToCart = async (product: any) => {
+    if ((product.sizes && product.sizes.length > 0) || (product.colors && product.colors.length > 0)) {
+      window.dispatchEvent(new CustomEvent('show-product-options', {
+        detail: { product }
+      }));
+      return;
+    }
+
+    setAddingId(product.id);
     try {
       const res = await fetch('/api/cart', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ productId }),
+        body: JSON.stringify({ productId: product.id }),
       });
       if (res.status === 401) {
         window.dispatchEvent(new CustomEvent('show-toast', {
@@ -100,11 +110,11 @@ export default function FlashSales({ products = [] }: FlashSalesProps) {
   }, []);
 
   return (
-    <section className="w-full px-6 md:px-12 lg:px-16 py-12 md:py-16 bg-white dark:bg-zinc-950 transition-colors duration-200">
+    <section className="w-full px-6 md:px-12 lg:px-16 py-12 md:py-16 bg-white dark:bg-zinc-955 transition-colors duration-200">
       <div className="max-w-[1600px] mx-auto flex flex-col gap-8">
         
         {/* Banner Top Info Card */}
-        <div className="w-full bg-gradient-to-r from-yellow-500 to-yellow-500 dark:from-violet-900/60 dark:to-indigo-950/60 text-white rounded-3xl p-3 md:p-4 flex md:flex-row justify-between items-center gap-6">
+        <div className="w-full bg-gradient-to-r from-yellow-500 to-yellow-500 dark:from-violet-900/60 dark:to-indigo-955/60 text-white rounded-3xl p-3 md:p-4 flex md:flex-row justify-between items-center gap-6">
           <div className="text-center md:text-left">
             <span className="text-[10px] font-bold uppercase tracking-widest bg-red-500 px-3 py-1 rounded-full inline-block">
               Flash Deal
@@ -172,11 +182,11 @@ export default function FlashSales({ products = [] }: FlashSalesProps) {
                   {/* Static Add to Cart Overlay */}
                   <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent flex items-end justify-center p-4 pt-12 z-10">
                     <button 
-                      onClick={() => handleAddToCart(prod.id)}
-                      disabled={addingId === prod.id}
-                      className="w-full bg-pink-500 hover:bg-pink-600 disabled:bg-zinc-200 disabled:text-zinc-400 text-white font-bold text-xs py-3.5 rounded-2xl transition duration-150 shadow-lg text-center cursor-pointer"
+                      onClick={() => handleAddToCart(prod)}
+                      disabled={addingId === prod.id || prod.status === 'Out Of Stock'}
+                      className="w-full bg-pink-500 hover:bg-pink-600 disabled:bg-zinc-200 disabled:text-zinc-400 text-white font-bold text-xs py-3.5 rounded-2xl transition duration-150 shadow-lg text-center cursor-pointer disabled:cursor-not-allowed"
                     >
-                      {addingId === prod.id ? "Adding..." : "Add to Cart"}
+                      {addingId === prod.id ? "Adding..." : prod.status === 'Out Of Stock' ? "Out of Stock" : "Add to Cart"}
                     </button>
                   </div>
                 </div>

@@ -42,8 +42,10 @@ export default async function Home() {
       }
     }
 
-    // Query featured and flash sale products
-    const featuredList = await Product.find({ featured: true, status: 'Active' }).sort({ createdAt: -1 }).limit(4);
+    // Query featured products (In Stock or Few Left only)
+    const activeStatus = { $in: ['In Stock', 'Few Left'] };
+
+    const featuredList = await Product.find({ featured: true, status: activeStatus }).sort({ createdAt: -1 }).limit(4);
     featuredProducts = featuredList.map(p => ({
       id: p._id.toString(),
       name: p.name,
@@ -51,6 +53,7 @@ export default async function Home() {
       rating: p.rating,
       type: p.type,
       category: p.category,
+      status: p.status,
       promo: p.promo,
       flashSale: p.flashSale,
       oldPrice: p.oldPrice,
@@ -59,9 +62,11 @@ export default async function Home() {
       featured: p.featured,
       sponsored: p.sponsored,
       image: p.image,
+      colors: p.colors || [],
+      sizes: p.sizes || [],
     }));
 
-    const flashList = await Product.find({ flashSale: true, status: 'Active' }).sort({ createdAt: -1 }).limit(4);
+    const flashList = await Product.find({ flashSale: true, status: activeStatus }).sort({ createdAt: -1 }).limit(4);
     flashProducts = flashList.map(p => ({
       id: p._id.toString(),
       name: p.name,
@@ -69,6 +74,7 @@ export default async function Home() {
       rating: p.rating,
       type: p.type,
       category: p.category,
+      status: p.status,
       promo: p.promo,
       flashSale: p.flashSale,
       oldPrice: p.oldPrice,
@@ -77,10 +83,12 @@ export default async function Home() {
       featured: p.featured,
       sponsored: p.sponsored,
       image: p.image,
+      colors: p.colors || [],
+      sizes: p.sizes || [],
     }));
 
     // Query top selling products
-    const topSellingList = await Product.find({ topSelling: true, status: 'Active' }).sort({ createdAt: -1 }).limit(3);
+    const topSellingList = await Product.find({ topSelling: true, status: activeStatus }).sort({ createdAt: -1 }).limit(3);
     topSellingProducts = topSellingList.map(p => ({
       id: p._id.toString(),
       name: p.name,
@@ -88,6 +96,7 @@ export default async function Home() {
       rating: p.rating,
       type: p.type,
       category: p.category,
+      status: p.status,
       promo: p.promo,
       flashSale: p.flashSale,
       oldPrice: p.oldPrice,
@@ -96,10 +105,12 @@ export default async function Home() {
       featured: p.featured,
       sponsored: p.sponsored,
       image: p.image,
+      colors: p.colors || [],
+      sizes: p.sizes || [],
     }));
 
     // Query sponsored products
-    const sponsoredList = await Product.find({ sponsored: true, status: 'Active' }).sort({ createdAt: -1 }).limit(2);
+    const sponsoredList = await Product.find({ sponsored: true, status: activeStatus }).sort({ createdAt: -1 }).limit(2);
     sponsoredProducts = sponsoredList.map(p => ({
       id: p._id.toString(),
       name: p.name,
@@ -107,6 +118,7 @@ export default async function Home() {
       rating: p.rating,
       type: p.type,
       category: p.category,
+      status: p.status,
       promo: p.promo,
       flashSale: p.flashSale,
       oldPrice: p.oldPrice,
@@ -115,10 +127,12 @@ export default async function Home() {
       featured: p.featured,
       sponsored: p.sponsored,
       image: p.image,
+      colors: p.colors || [],
+      sizes: p.sizes || [],
     }));
 
     // Query promo products
-    const promoList = await Product.find({ promo: true, status: 'Active' }).sort({ createdAt: -1 });
+    const promoList = await Product.find({ promo: true, status: activeStatus }).sort({ createdAt: -1 });
     promoProducts = promoList.map(p => ({
       id: p._id.toString(),
       name: p.name,
@@ -126,6 +140,7 @@ export default async function Home() {
       rating: p.rating,
       type: p.type,
       category: p.category,
+      status: p.status,
       promo: p.promo,
       flashSale: p.flashSale,
       oldPrice: p.oldPrice,
@@ -134,10 +149,12 @@ export default async function Home() {
       featured: p.featured,
       sponsored: p.sponsored,
       image: p.image,
+      colors: p.colors || [],
+      sizes: p.sizes || [],
     }));
 
-    // Query all active products
-    const allList = await Product.find({ status: 'Active' }).sort({ createdAt: -1 });
+    // Query all In Stock / Few Left products
+    const allList = await Product.find({ status: activeStatus }).sort({ createdAt: -1 });
     allProducts = allList.map(p => ({
       id: p._id.toString(),
       name: p.name,
@@ -145,6 +162,7 @@ export default async function Home() {
       rating: p.rating,
       type: p.type,
       category: p.category,
+      status: p.status,
       promo: p.promo,
       flashSale: p.flashSale,
       oldPrice: p.oldPrice,
@@ -153,6 +171,8 @@ export default async function Home() {
       featured: p.featured,
       sponsored: p.sponsored,
       image: p.image,
+      colors: p.colors || [],
+      sizes: p.sizes || [],
     }));
   } catch (error) {
     console.error('Error fetching data on home page:', error);

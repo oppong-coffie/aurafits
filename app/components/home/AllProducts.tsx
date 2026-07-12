@@ -17,6 +17,9 @@ interface ProductItem {
   topSelling?: boolean;
   sponsored?: boolean;
   flashSale?: boolean;
+  colors?: string[];
+  sizes?: string[];
+  status?: string;
 }
 
 interface AllProductsProps {
@@ -26,15 +29,22 @@ interface AllProductsProps {
 export default function AllProducts({ products = [] }: AllProductsProps) {
   const [addingId, setAddingId] = React.useState<string | null>(null);
 
-  const handleAddToCart = async (productId: string) => {
-    setAddingId(productId);
+  const handleAddToCart = async (product: ProductItem) => {
+    if ((product.sizes && product.sizes.length > 0) || (product.colors && product.colors.length > 0)) {
+      window.dispatchEvent(new CustomEvent('show-product-options', {
+        detail: { product }
+      }));
+      return;
+    }
+
+    setAddingId(product.id);
     try {
       const res = await fetch('/api/cart', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ productId }),
+        body: JSON.stringify({ productId: product.id }),
       });
       if (res.status === 401) {
         window.dispatchEvent(new CustomEvent('show-toast', {
@@ -136,12 +146,12 @@ export default function AllProducts({ products = [] }: AllProductsProps) {
                       {/* Static Add to Cart Overlay */}
                       <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent flex items-end justify-center p-3 pt-10 z-10">
                         <button 
-                          onClick={() => handleAddToCart(prod.id)}
-                          disabled={addingId === prod.id}
-                          className="w-full bg-pink-500 hover:bg-pink-650 disabled:bg-zinc-200 disabled:text-zinc-400 text-white font-bold text-xs py-3 rounded-2xl transition duration-150 shadow-md flex items-center justify-center gap-1.5 cursor-pointer"
+                          onClick={() => handleAddToCart(prod)}
+                          disabled={addingId === prod.id || prod.status === 'Out Of Stock'}
+                          className="w-full bg-pink-500 hover:bg-pink-650 disabled:bg-zinc-200 disabled:text-zinc-400 text-white font-bold text-xs py-3 rounded-2xl transition duration-150 shadow-md flex items-center justify-center gap-1.5 cursor-pointer disabled:cursor-not-allowed"
                         >
                           <ShoppingBag size={14} />
-                          <span>{addingId === prod.id ? "Adding..." : "Add to Cart"}</span>
+                          <span>{addingId === prod.id ? "Adding..." : prod.status === 'Out Of Stock' ? "Out of Stock" : "Add to Cart"}</span>
                         </button>
                       </div>
                     </div>

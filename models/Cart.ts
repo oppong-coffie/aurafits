@@ -4,6 +4,8 @@ export interface ICart extends Document {
   userId: string;
   productId: mongoose.Types.ObjectId;
   quantity: number;
+  size?: string;
+  color?: string;
   createdAt: Date;
   status: 'pending' | 'wish' | 'paid' | 'cart' | 'accepted' | 'completed' | 'cancelled';
 }
@@ -24,6 +26,12 @@ const CartSchema = new Schema<ICart>({
     required: [true, 'Quantity is required'],
     default: 1,
     min: [1, 'Quantity must be at least 1'],
+  },
+  size: {
+    type: String,
+  },
+  color: {
+    type: String,
   },
   status: {
     type: String,

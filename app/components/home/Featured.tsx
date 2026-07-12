@@ -21,20 +21,30 @@ export default function Featured({ products = [] }: FeaturedProps) {
     badge: p.promo ? "Promo" : p.topSelling ? "Top Seller" : p.sponsored ? "Sponsored" : "Featured",
     category: p.category,
     image: p.image || `/featured${(i % 4) + 1}.jpg`,
-    description: "Signature item from our latest collection drop."
+    description: "Signature item from our latest collection drop.",
+    colors: p.colors || [],
+    sizes: p.sizes || [],
+    status: p.status || 'In Stock',
   }));
 
   const [addingId, setAddingId] = React.useState<string | null>(null);
 
-  const handleAddToCart = async (productId: string) => {
-    setAddingId(productId);
+  const handleAddToCart = async (product: any) => {
+    if ((product.sizes && product.sizes.length > 0) || (product.colors && product.colors.length > 0)) {
+      window.dispatchEvent(new CustomEvent('show-product-options', {
+        detail: { product }
+      }));
+      return;
+    }
+
+    setAddingId(product.id);
     try {
       const res = await fetch('/api/cart', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ productId }),
+        body: JSON.stringify({ productId: product.id }),
       });
       if (res.status === 401) {
         window.dispatchEvent(new CustomEvent('show-toast', {
@@ -71,7 +81,7 @@ export default function Featured({ products = [] }: FeaturedProps) {
       <div className="max-w-[1600px] mx-auto">
         <div className="mb-10 border-b border-zinc-200/60 dark:border-zinc-800/60 pb-5">
           <h2 className="text-2xl md:text-3xl font-extrabold text-zinc-900 dark:text-zinc-50 tracking-tight">Featured Products</h2>
-          <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">Explore handpicked signature items from our latest collection drops.</p>
+          <p className="text-xs text-zinc-550 dark:text-zinc-400 mt-0.5">Explore handpicked signature items from our latest collection drops.</p>
         </div>
 
         {/* Featured Products Grid */}
@@ -96,11 +106,11 @@ export default function Featured({ products = [] }: FeaturedProps) {
                   {/* Static Add to Cart Overlay */}
                   <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent flex items-end justify-center p-4 pt-12 z-10">
                     <button 
-                      onClick={() => handleAddToCart(prod.id)}
-                      disabled={addingId === prod.id}
-                      className="w-full bg-pink-500 hover:bg-pink-600 disabled:bg-zinc-200 disabled:text-zinc-400 text-white font-bold text-xs py-3.5 rounded-2xl transition duration-150 shadow-lg text-center cursor-pointer"
+                      onClick={() => handleAddToCart(prod)}
+                      disabled={addingId === prod.id || prod.status === 'Out Of Stock'}
+                      className="w-full bg-pink-500 hover:bg-pink-600 disabled:bg-zinc-200 disabled:text-zinc-400 text-white font-bold text-xs py-3.5 rounded-2xl transition duration-150 shadow-lg text-center cursor-pointer disabled:cursor-not-allowed"
                     >
-                      {addingId === prod.id ? "Adding..." : "Add to Cart"}
+                      {addingId === prod.id ? "Adding..." : prod.status === 'Out Of Stock' ? "Out of Stock" : "Add to Cart"}
                     </button>
                   </div>
                 </div>

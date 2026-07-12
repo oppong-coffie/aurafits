@@ -25,21 +25,31 @@ export default function Sponsored({ products = [] }: SponsoredProps) {
       price: p.price,
       tagline: "Eco-conscious protection & timeless style",
       category: p.category,
-      image: p.image || `/sponsored${(i % 2) + 1}.jpg`
+      image: p.image || `/sponsored${(i % 2) + 1}.jpg`,
+      colors: p.colors || [],
+      sizes: p.sizes || [],
+      status: p.status || 'In Stock',
     };
   });
 
   const [addingId, setAddingId] = React.useState<string | null>(null);
 
-  const handleAddToCart = async (productId: string) => {
-    setAddingId(productId);
+  const handleAddToCart = async (product: any) => {
+    if ((product.sizes && product.sizes.length > 0) || (product.colors && product.colors.length > 0)) {
+      window.dispatchEvent(new CustomEvent('show-product-options', {
+        detail: { product }
+      }));
+      return;
+    }
+
+    setAddingId(product.id);
     try {
       const res = await fetch('/api/cart', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ productId }),
+        body: JSON.stringify({ productId: product.id }),
       });
       if (res.status === 401) {
         window.dispatchEvent(new CustomEvent('show-toast', {
@@ -75,12 +85,12 @@ export default function Sponsored({ products = [] }: SponsoredProps) {
     <section className="w-full px-6 md:px-12 lg:px-16 py-12 md:py-16 bg-white dark:bg-zinc-950 transition-colors duration-200">
       <div className="max-w-[1600px] mx-auto">
         <div className="mb-10 border-b border-zinc-200/60 dark:border-zinc-800/60 pb-5 flex items-center gap-3">
-          <div className="bg-violet-50 dark:bg-violet-950/30 border border-violet-100 dark:border-violet-900/60 p-2.5 rounded-2xl text-violet-600 dark:text-violet-400">
+          <div className="bg-violet-50 dark:bg-violet-955/30 border border-violet-100 dark:border-violet-900/60 p-2.5 rounded-2xl text-violet-600 dark:text-violet-400">
             <Sparkles size={22} className="fill-current" />
           </div>
           <div>
             <h2 className="text-2xl md:text-3xl font-extrabold text-zinc-900 dark:text-zinc-50 tracking-tight">Featured Sponsors</h2>
-            <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">Handpicked premium designs sponsored by our key partner labels.</p>
+            <p className="text-xs text-zinc-555 dark:text-zinc-400 mt-0.5">Handpicked premium designs sponsored by our key partner labels.</p>
           </div>
         </div>
 
@@ -106,11 +116,11 @@ export default function Sponsored({ products = [] }: SponsoredProps) {
                   {/* Static Add to Cart Overlay */}
                   <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent flex items-end justify-center p-4 pt-12 z-10">
                     <button 
-                      onClick={() => handleAddToCart(item.id)}
-                      disabled={addingId === item.id}
-                      className="w-full bg-pink-500 hover:bg-pink-600 disabled:bg-zinc-200 disabled:text-zinc-400 text-white font-bold text-xs py-3.5 rounded-2xl transition duration-150 shadow-lg text-center cursor-pointer"
+                      onClick={() => handleAddToCart(item)}
+                      disabled={addingId === item.id || item.status === 'Out Of Stock'}
+                      className="w-full bg-pink-500 hover:bg-pink-600 disabled:bg-zinc-200 disabled:text-zinc-400 text-white font-bold text-xs py-3.5 rounded-2xl transition duration-150 shadow-lg text-center cursor-pointer disabled:cursor-not-allowed"
                     >
-                      {addingId === item.id ? "Adding..." : "Add to Cart"}
+                      {addingId === item.id ? "Adding..." : item.status === 'Out Of Stock' ? "Out of Stock" : "Add to Cart"}
                     </button>
                   </div>
                 </div>

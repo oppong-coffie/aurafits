@@ -26,6 +26,8 @@ interface CartItem {
   userId: string;
   productId: Product;
   quantity: number;
+  size?: string;
+  color?: string;
   createdAt: string;
 }
 
@@ -38,7 +40,7 @@ export default function WishlistContent({ initialItems = [] }: WishlistContentPr
   const [updatingId, setUpdatingId] = useState<string | null>(null);
 
   // Restore item to cart (status: 'cart')
-  const handleRestoreToCart = async (productId: string) => {
+  const handleRestoreToCart = async (productId: string, size?: string, color?: string) => {
     setUpdatingId(productId);
     try {
       const res = await fetch('/api/cart', {
@@ -46,11 +48,11 @@ export default function WishlistContent({ initialItems = [] }: WishlistContentPr
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ productId, status: 'pending' }),
+        body: JSON.stringify({ productId, status: 'pending', size, color }),
       });
       const data = await res.json();
       if (data.success) {
-        setItems(prev => prev.filter(item => item.productId._id !== productId));
+        setItems(prev => prev.filter(item => !(item.productId._id === productId && item.size === size && item.color === color)));
         window.dispatchEvent(new CustomEvent('cart-updated'));
       } else {
         alert(data.message || 'Failed to restore item.');
@@ -63,16 +65,16 @@ export default function WishlistContent({ initialItems = [] }: WishlistContentPr
   };
 
   // Delete item completely from wishlist (status: 'wish')
-  const handleDeleteItem = async (productId: string) => {
+  const handleDeleteItem = async (productId: string, size?: string, color?: string) => {
     if (!confirm('Are you sure you want to permanently delete this item from your wishlist?')) return;
     setUpdatingId(productId);
     try {
-      const res = await fetch(`/api/cart?productId=${productId}&status=wish`, {
+      const res = await fetch(`/api/cart?productId=${productId}&status=wish&size=${encodeURIComponent(size || '')}&color=${encodeURIComponent(color || '')}`, {
         method: 'DELETE',
       });
       const data = await res.json();
       if (data.success) {
-        setItems(prev => prev.filter(item => item.productId._id !== productId));
+        setItems(prev => prev.filter(item => !(item.productId._id === productId && item.size === size && item.color === color)));
       } else {
         alert(data.message || 'Failed to delete item.');
       }
@@ -154,9 +156,11 @@ export default function WishlistContent({ initialItems = [] }: WishlistContentPr
                       <h3 className="font-bold text-base text-zinc-900 dark:text-zinc-50 mt-0.5">
                         {p.name}
                       </h3>
-                      <p className="text-xs text-zinc-450 dark:text-zinc-405 font-medium mt-0.5">
-                        Type: {p.type ? p.type.toUpperCase() : 'STAPLE'}
-                      </p>
+                      <div className="text-xs text-zinc-455 dark:text-zinc-405 font-medium mt-0.5 flex flex-col gap-0.5">
+                        <p>Type: {p.type ? p.type.toUpperCase() : 'STAPLE'}</p>
+                        {item.size && <p className="text-violet-650 dark:text-violet-400 font-bold uppercase">Size: {item.size}</p>}
+                        {item.color && <p className="text-pink-650 dark:text-pink-400 font-bold uppercase">Color: {item.color}</p>}
+                      </div>
                       
                       {/* Price & Quantity Info */}
                       <div className="flex items-center justify-between mt-3">
@@ -173,16 +177,16 @@ export default function WishlistContent({ initialItems = [] }: WishlistContentPr
                   {/* Actions Row */}
                   <div className="flex gap-2.5 mt-5 pt-4 border-t border-zinc-100 dark:border-zinc-800/50">
                     <button 
-                      onClick={() => handleRestoreToCart(p._id)}
+                      onClick={() => handleRestoreToCart(p._id, item.size, item.color)}
                       disabled={isUpdating}
-                      className="flex-1 flex items-center justify-center gap-1.5 text-xs font-bold bg-violet-600 hover:bg-violet-750 text-white py-3 px-4 rounded-2xl transition duration-150 cursor-pointer disabled:bg-violet-400"
+                      className="flex-1 flex items-center justify-center gap-1.5 text-xs font-bold bg-violet-600 hover:bg-violet-755 text-white py-3 px-4 rounded-2xl transition duration-150 cursor-pointer disabled:bg-violet-400"
                     >
                       <ShoppingCart size={13} />
                       <span>Restore to Cart</span>
                     </button>
                     
                     <button 
-                      onClick={() => handleDeleteItem(p._id)}
+                      onClick={() => handleDeleteItem(p._id, item.size, item.color)}
                       disabled={isUpdating}
                       className="p-3 text-rose-600 hover:text-rose-750 hover:bg-rose-50 dark:text-rose-400 dark:hover:text-rose-350 dark:hover:bg-rose-950/20 rounded-2xl border border-zinc-200/40 dark:border-zinc-800/40 transition duration-150 cursor-pointer"
                       aria-label="Delete Item"

@@ -42,7 +42,7 @@ const CATEGORY_DETAILS: Record<string, { name: string; description: string; bgIm
   "footwear": {
     name: "Foot Wear",
     description: "Premium leather shoes, boots, and sneakers designed for comfort and poise.",
-    bgImage: "/slide2.jpg"
+    bgImage: "/foot1.jpg"
   }
 };
 
@@ -75,14 +75,15 @@ export default async function CategoryPage({ params }: PageProps) {
       }
     }
 
-    // Query active products from DB
-    const list = await Product.find({ category: normalizedSlug, status: 'Active' }).sort({ createdAt: -1 });
+    // Query all products for this category (all statuses)
+    const list = await Product.find({ category: normalizedSlug }).sort({ createdAt: -1 });
     productsList = list.map(p => ({
       id: p._id.toString(),
       name: p.name,
       price: p.price,
       rating: p.rating,
       type: p.type,
+      status: p.status,
       promo: p.promo,
       flashSale: p.flashSale,
       oldPrice: p.oldPrice,
@@ -91,6 +92,8 @@ export default async function CategoryPage({ params }: PageProps) {
       featured: p.featured,
       sponsored: p.sponsored,
       image: p.image,
+      colors: p.colors || [],
+      sizes: p.sizes || [],
     }));
   } catch (error) {
     console.error('Error fetching data on category page:', error);

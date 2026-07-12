@@ -6,7 +6,7 @@ export interface IProduct extends Document {
   price: number;
   rating: number;
   type: string;
-  status: 'Active' | 'Flagged';
+  status: 'In Stock' | 'Out Of Stock' | 'Few Left';
   promo?: boolean;
   flashSale?: boolean;
   oldPrice?: number;
@@ -15,6 +15,8 @@ export interface IProduct extends Document {
   featured?: boolean;
   sponsored?: boolean;
   image?: string;
+  colors?: string[];
+  sizes?: string[];
   createdAt: Date;
 }
 
@@ -26,6 +28,14 @@ const ProductSchema = new Schema<IProduct>({
   },
   image: {
     type: String,
+  },
+  colors: {
+    type: [String],
+    default: [],
+  },
+  sizes: {
+    type: [String],
+    default: [],
   },
   category: { 
     type: String, 
@@ -46,8 +56,8 @@ const ProductSchema = new Schema<IProduct>({
   },
   status: { 
     type: String, 
-    enum: ['Active', 'Flagged'], 
-    default: 'Active',
+    enum: ['In Stock', 'Out Of Stock', 'Few Left'], 
+    default: 'In Stock',
   },
   promo: { 
     type: Boolean, 

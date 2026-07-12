@@ -34,6 +34,9 @@ interface Product {
   topSelling?: boolean;
   featured?: boolean;
   sponsored?: boolean;
+  colors?: string[];
+  sizes?: string[];
+  status?: string;
 }
 
 interface CategoryListProps {
@@ -71,11 +74,22 @@ export default function CategoryList({ products }: CategoryListProps) {
   const [maxPrice, setMaxPrice] = useState(maxProductPrice);
   const [addingId, setAddingId] = useState<string | null>(null);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  
+  const [detailColor, setDetailColor] = useState('');
+  const [detailSize, setDetailSize] = useState('');
+
   const [notification, setNotification] = useState<{ show: boolean; message: string; type: 'success' | 'error' | null }>({
     show: false,
     message: '',
     type: null
   });
+
+  React.useEffect(() => {
+    if (selectedProduct) {
+      setDetailColor(selectedProduct.colors && selectedProduct.colors.length > 0 ? selectedProduct.colors[0] : '');
+      setDetailSize(selectedProduct.sizes && selectedProduct.sizes.length > 0 ? selectedProduct.sizes[0] : '');
+    }
+  }, [selectedProduct]);
 
   const showToast = (message: string, type: 'success' | 'error') => {
     setNotification({ show: true, message, type });
@@ -94,15 +108,22 @@ export default function CategoryList({ products }: CategoryListProps) {
     setMaxPrice(maxProductPrice);
   }, [maxProductPrice]);
 
-  const handleAddToCart = async (productId: string) => {
-    setAddingId(productId);
+  const handleAddToCart = async (product: any) => {
+    if ((product.sizes && product.sizes.length > 0) || (product.colors && product.colors.length > 0)) {
+      window.dispatchEvent(new CustomEvent('show-product-options', {
+        detail: { product }
+      }));
+      return;
+    }
+
+    setAddingId(product.id);
     try {
       const res = await fetch('/api/cart', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ productId }),
+        body: JSON.stringify({ productId: product.id }),
       });
       if (res.status === 401) {
         showToast('Please log in to add items to your cart.', 'error');
@@ -213,10 +234,23 @@ export default function CategoryList({ products }: CategoryListProps) {
                       )}
                     </div>
 
-                    {/* Rating */}
-                    <div className="flex items-center gap-1 mb-2">
-                      <Star className="w-3.5 h-3.5 fill-amber-400 stroke-amber-400 text-amber-400" />
-                      <span className="text-xs font-semibold text-zinc-650 dark:text-zinc-300">{product.rating}</span>
+                    {/* Rating + Status */}
+                    <div className="flex items-center justify-between gap-1 mb-2">
+                      <div className="flex items-center gap-1">
+                        <Star className="w-3.5 h-3.5 fill-amber-400 stroke-amber-400 text-amber-400" />
+                        <span className="text-xs font-semibold text-zinc-650 dark:text-zinc-300">{product.rating}</span>
+                      </div>
+                      {product.status && (
+                        <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider border ${
+                          product.status === 'Out Of Stock'
+                            ? 'bg-rose-50 dark:bg-rose-950/30 border-rose-200 dark:border-rose-900/50 text-rose-600 dark:text-rose-400'
+                            : product.status === 'Few Left'
+                            ? 'bg-amber-50 dark:bg-amber-950/30 border-amber-200 dark:border-amber-900/50 text-amber-600 dark:text-amber-400'
+                            : 'bg-emerald-50 dark:bg-emerald-950/30 border-emerald-200 dark:border-emerald-900/50 text-emerald-600 dark:text-emerald-400'
+                        }`}>
+                          {product.status}
+                        </span>
+                      )}
                     </div>
 
                     {/* Product Title */}
@@ -242,12 +276,18 @@ export default function CategoryList({ products }: CategoryListProps) {
                         View
                       </button>
                       <button 
-                        onClick={() => handleAddToCart(product.id)}
-                        disabled={addingId === product.id}
-                        className="flex-[2] bg-pink-600 hover:bg-pink-700 active:bg-pink-800 disabled:bg-zinc-200 dark:disabled:bg-zinc-800 disabled:text-zinc-400 dark:disabled:text-zinc-500 text-white font-semibold text-xs py-3 rounded-2xl transition duration-150 cursor-pointer disabled:cursor-not-allowed shadow-sm flex items-center justify-center gap-1.5"
+                        onClick={() => handleAddToCart(product)}
+                        disabled={addingId === product.id || product.status === 'Out Of Stock'}
+                        className="flex-[2] bg-pink-600 hover:bg-pink-700 active:bg-pink-800 disabled:bg-zinc-200 dark:disabled:bg-zinc-800 disabled:text-zinc-400 dark:disabled:text-zinc-550 text-white font-semibold text-xs py-3 rounded-2xl transition duration-150 cursor-pointer disabled:cursor-not-allowed shadow-sm flex items-center justify-center gap-1.5"
                       >
                         <ShoppingBag size={14} />
-                        <span>{addingId === product.id ? "Adding..." : "Add to Cart"}</span>
+                        <span>{
+                          addingId === product.id
+                            ? "Adding..."
+                            : product.status === 'Out Of Stock'
+                            ? "Out of Stock"
+                            : "Add to Cart"
+                        }</span>
                       </button>
                     </div>
                   </div>
@@ -367,10 +407,68 @@ export default function CategoryList({ products }: CategoryListProps) {
                       </div>
                       <div>
                         <span className="font-semibold text-zinc-400 dark:text-zinc-505 uppercase tracking-wider block text-[9px]">Status</span>
-                        <span className="font-medium text-emerald-600 dark:text-emerald-400 mt-0.5 block font-bold">In Stock</span>
+                        <span className={`font-medium mt-0.5 block font-bold ${
+                          selectedProduct.status === 'Out Of Stock'
+                            ? 'text-rose-600 dark:text-rose-450'
+                            : selectedProduct.status === 'Few Left'
+                            ? 'text-amber-600 dark:text-amber-450'
+                            : 'text-emerald-600 dark:text-emerald-450'
+                        }`}>
+                          {selectedProduct.status || 'In Stock'}
+                        </span>
                       </div>
                     </div>
                   </div>
+
+                  {/* Color Selector */}
+                  {selectedProduct.colors && selectedProduct.colors.length > 0 && (
+                    <div className="space-y-1.5 pt-2">
+                      <span className="text-[10px] font-bold text-zinc-455 dark:text-zinc-500 uppercase tracking-wider block">
+                        Select Color
+                      </span>
+                      <div className="flex flex-wrap gap-2">
+                        {selectedProduct.colors.map((c) => (
+                          <button
+                            key={c}
+                            type="button"
+                            onClick={() => setDetailColor(c)}
+                            className={`px-2.5 py-1.5 rounded-xl text-xs font-semibold border transition cursor-pointer ${
+                              detailColor === c
+                                ? 'bg-pink-55 dark:bg-pink-955/20 border-pink-500 text-pink-700 dark:text-pink-400 font-bold'
+                                : 'bg-zinc-50 dark:bg-zinc-950 border-zinc-200 dark:border-zinc-800 text-zinc-650 dark:text-zinc-400'
+                            }`}
+                          >
+                            {c}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Size Selector */}
+                  {selectedProduct.sizes && selectedProduct.sizes.length > 0 && (
+                    <div className="space-y-1.5 pt-2">
+                      <span className="text-[10px] font-bold text-zinc-455 dark:text-zinc-500 uppercase tracking-wider block">
+                        Select Size
+                      </span>
+                      <div className="flex flex-wrap gap-2">
+                        {selectedProduct.sizes.map((s) => (
+                          <button
+                            key={s}
+                            type="button"
+                            onClick={() => setDetailSize(s)}
+                            className={`px-2.5 py-1.5 rounded-xl text-xs font-semibold border transition cursor-pointer ${
+                              detailSize === s
+                                ? 'bg-violet-50 dark:bg-violet-955/20 border-violet-500 text-violet-700 dark:text-violet-400 font-bold'
+                                : 'bg-zinc-55 dark:bg-zinc-955/20 border-zinc-200 dark:border-zinc-800 text-zinc-650 dark:text-zinc-400'
+                            }`}
+                          >
+                            {s}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
 
                   {/* Pricing Block */}
                   <div className="pt-2 flex items-baseline gap-2.5">
@@ -383,27 +481,77 @@ export default function CategoryList({ products }: CategoryListProps) {
 
                 {/* Actions Button */}
                 <div className="mt-8 space-y-2">
-                  <a 
-                    href={`https://wa.me/233201321543?text=${encodeURIComponent(`Hello, I'm interested in buying the ${selectedProduct.name} from AuraFits.`)}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full bg-emerald-600 hover:bg-emerald-750 active:bg-emerald-800 text-white font-semibold text-xs py-3.5 rounded-2xl transition duration-150 flex items-center justify-center gap-2 shadow-sm cursor-pointer no-underline text-center"
-                  >
-                    <svg className="w-4.5 h-4.5 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.003 5.234 5.24.001 11.693.001c3.128.002 6.07 1.22 8.28 3.434 2.21 2.215 3.425 5.162 3.424 8.291-.003 6.458-5.24 11.691-11.693 11.691-2.007-.001-3.97-.514-5.712-1.493L0 24zm6.49-3.232c1.644.976 3.256 1.488 4.954 1.49 5.305 0 9.622-4.297 9.624-9.578.002-2.556-.994-4.961-2.805-6.772C16.48 4.097 14.083 3.1 11.533 3.1c-5.302 0-9.619 4.298-9.62 9.582-.001 1.716.463 3.397 1.343 4.896L2.29 21.73l4.257-1.122zM16.63 13.91c-.278-.14-.1.642-.278.642-.284-.144-1.127-.417-2.15-1.328-.79-.705-1.324-1.577-1.48-1.846-.155-.269-.016-.414.12-.55.12-.12.278-.325.417-.487.14-.162.186-.278.278-.464.093-.186.046-.348-.023-.487-.069-.14-.627-1.51-.86-2.07-.225-.544-.453-.47-.626-.479-.162-.008-.348-.01-.532-.01-.186 0-.488.07-.743.348-.256.278-.975.952-.975 2.321 0 1.369.998 2.69 1.137 2.876.14.186 1.966 3.003 4.76 4.206.666.286 1.185.457 1.59.586.67.213 1.28.183 1.762.111.537-.08 1.646-.672 1.878-1.322.232-.65.232-1.206.162-1.322-.069-.116-.255-.186-.534-.326z"/>
-                    </svg>
-                    <span>Chat 0201321543 to Order</span>
-                  </a>
+                  {selectedProduct.status === 'Out Of Stock' ? (
+                    <button
+                      disabled
+                      className="w-full bg-zinc-200 dark:bg-zinc-800 text-zinc-400 dark:text-zinc-550 font-semibold text-xs py-3.5 rounded-2xl flex items-center justify-center gap-2 cursor-not-allowed opacity-60"
+                    >
+                      <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.003 5.234 5.24.001 11.693.001c3.128.002 6.07 1.22 8.28 3.434 2.21 2.215 3.425 5.162 3.424 8.291-.003 6.458-5.24 11.691-11.693 11.691-2.007-.001-3.97-.514-5.712-1.493L0 24zm6.49-3.232c1.644.976 3.256 1.488 4.954 1.49 5.305 0 9.622-4.297 9.624-9.578.002-2.556-.994-4.961-2.805-6.772C16.48 4.097 14.083 3.1 11.533 3.1c-5.302 0-9.619 4.298-9.62 9.582-.001 1.716.463 3.397 1.343 4.896L2.29 21.73l4.257-1.122zM16.63 13.91c-.278-.14-.1.642-.278.642-.284-.144-1.127-.417-2.15-1.328-.79-.705-1.324-1.577-1.48-1.846-.155-.269-.016-.414.12-.55.12-.12.278-.325.417-.487.14-.162.186-.278.278-.464.093-.186.046-.348-.023-.487-.069-.14-.627-1.51-.86-2.07-.225-.544-.453-.47-.626-.479-.162-.008-.348-.01-.532-.01-.186 0-.488.07-.743.348-.256.278-.975.952-.975 2.321 0 1.369.998 2.69 1.137 2.876.14.186 1.966 3.003 4.76 4.206.666.286 1.185.457 1.59.586.67.213 1.28.183 1.762.111.537-.08 1.646-.672 1.878-1.322.232-.65.232-1.206.162-1.322-.069-.116-.255-.186-.534-.326z"/>
+                      </svg>
+                      <span>Chat Unavailable — Out of Stock</span>
+                    </button>
+                  ) : (
+                    <a 
+                      href={`https://wa.me/233201321543?text=${encodeURIComponent(`Hello, I'm interested in buying the ${selectedProduct.name} from AuraFits.`)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full bg-emerald-600 hover:bg-emerald-750 active:bg-emerald-800 text-white font-semibold text-xs py-3.5 rounded-2xl transition duration-150 flex items-center justify-center gap-2 shadow-sm cursor-pointer no-underline text-center"
+                    >
+                      <svg className="w-4.5 h-4.5 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.003 5.234 5.24.001 11.693.001c3.128.002 6.07 1.22 8.28 3.434 2.21 2.215 3.425 5.162 3.424 8.291-.003 6.458-5.24 11.691-11.693 11.691-2.007-.001-3.97-.514-5.712-1.493L0 24zm6.49-3.232c1.644.976 3.256 1.488 4.954 1.49 5.305 0 9.622-4.297 9.624-9.578.002-2.556-.994-4.961-2.805-6.772C16.48 4.097 14.083 3.1 11.533 3.1c-5.302 0-9.619 4.298-9.62 9.582-.001 1.716.463 3.397 1.343 4.896L2.29 21.73l4.257-1.122zM16.63 13.91c-.278-.14-.1.642-.278.642-.284-.144-1.127-.417-2.15-1.328-.79-.705-1.324-1.577-1.48-1.846-.155-.269-.016-.414.12-.55.12-.12.278-.325.417-.487.14-.162.186-.278.278-.464.093-.186.046-.348-.023-.487-.069-.14-.627-1.51-.86-2.07-.225-.544-.453-.47-.626-.479-.162-.008-.348-.01-.532-.01-.186 0-.488.07-.743.348-.256.278-.975.952-.975 2.321 0 1.369.998 2.69 1.137 2.876.14.186 1.966 3.003 4.76 4.206.666.286 1.185.457 1.59.586.67.213 1.28.183 1.762.111.537-.08 1.646-.672 1.878-1.322.232-.65.232-1.206.162-1.322-.069-.116-.255-.186-.534-.326z"/>
+                      </svg>
+                      <span>Chat 0201321543 to Order</span>
+                    </a>
+                  )}
                   <button 
-                    onClick={() => {
-                      handleAddToCart(selectedProduct.id);
-                      setSelectedProduct(null);
+                    onClick={async () => {
+                      setAddingId(selectedProduct.id);
+                      try {
+                        const res = await fetch('/api/cart', {
+                          method: 'POST',
+                          headers: {
+                            'Content-Type': 'application/json',
+                          },
+                          body: JSON.stringify({ 
+                            productId: selectedProduct.id,
+                            size: detailSize || undefined,
+                            color: detailColor || undefined
+                          }),
+                        });
+                        if (res.status === 401) {
+                          showToast('Please log in to add items to your cart.', 'error');
+                          setTimeout(() => {
+                            window.location.href = '/login';
+                          }, 1500);
+                          return;
+                        }
+                        const data = await res.json();
+                        if (data.success) {
+                          showToast('Product added to cart!', 'success');
+                          window.dispatchEvent(new CustomEvent('cart-updated'));
+                          setSelectedProduct(null);
+                        } else {
+                          showToast(data.message || 'Failed to add item to cart.', 'error');
+                        }
+                      } catch (err) {
+                        console.error('Error adding to cart:', err);
+                        showToast('An error occurred. Please try again.', 'error');
+                      } finally {
+                        setAddingId(null);
+                      }
                     }}
-                    disabled={addingId === selectedProduct.id}
-                    className="w-full bg-zinc-900 hover:bg-zinc-800 active:bg-black dark:bg-white dark:hover:bg-zinc-100 dark:active:bg-zinc-200 text-white dark:text-zinc-900 font-semibold text-xs py-3.5 rounded-2xl transition duration-150 flex items-center justify-center gap-2 shadow-xs cursor-pointer disabled:cursor-not-allowed"
+                    disabled={addingId === selectedProduct.id || selectedProduct.status === 'Out Of Stock'}
+                    className="w-full bg-zinc-900 hover:bg-zinc-800 active:bg-black dark:bg-white dark:hover:bg-zinc-100 dark:active:bg-zinc-200 text-white dark:text-zinc-900 font-semibold text-xs py-3.5 rounded-2xl transition duration-150 flex items-center justify-center gap-2 shadow-xs cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     <ShoppingBag size={15} />
-                    <span>{addingId === selectedProduct.id ? "Adding..." : "Add to Cart"}</span>
+                    <span>
+                      {addingId === selectedProduct.id
+                        ? "Adding..."
+                        : selectedProduct.status === 'Out Of Stock'
+                        ? "Out of Stock"
+                        : "Add to Cart"}
+                    </span>
                   </button>
                 </div>
               </div>

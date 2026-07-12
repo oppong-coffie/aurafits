@@ -59,6 +59,8 @@ export default async function CartPage() {
         _id: item._id.toString(),
         userId: item.userId,
         quantity: item.quantity,
+        size: item.size || null,
+        color: item.color || null,
         createdAt: item.createdAt.toISOString(),
         productId: {
           _id: item.productId._id.toString(),
@@ -67,6 +69,8 @@ export default async function CartPage() {
           category: item.productId.category,
           image: item.productId.image || null,
           type: item.productId.type || null,
+          sizes: item.productId.sizes || [],
+          colors: item.productId.colors || [],
         }
       }));
 

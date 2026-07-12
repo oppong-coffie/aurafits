@@ -16,7 +16,9 @@ const CreateProductSchema = z.object({
   featured: z.boolean().optional(),
   sponsored: z.boolean().optional(),
   image: z.string().optional(),
-  status: z.enum(['Active', 'Flagged']).optional(),
+  status: z.enum(['In Stock', 'Out Of Stock', 'Few Left']).optional(),
+  colors: z.array(z.string()).optional(),
+  sizes: z.array(z.string()).optional(),
 });
 
 
@@ -56,6 +58,8 @@ export async function getProducts(request: Request) {
         featured: p.featured,
         sponsored: p.sponsored,
         image: p.image,
+        colors: p.colors || [],
+        sizes: p.sizes || [],
       }))
     });
   } catch (error: any) {
@@ -83,7 +87,7 @@ export async function createProduct(request: Request) {
     const newProduct = await Product.create({
       ...result.data,
       rating: 4.5,
-      status: 'Active'
+      status: result.data.status || 'In Stock'
     });
 
     return NextResponse.json({
@@ -104,6 +108,8 @@ export async function createProduct(request: Request) {
         featured: newProduct.featured,
         sponsored: newProduct.sponsored,
         image: newProduct.image,
+        colors: newProduct.colors || [],
+        sizes: newProduct.sizes || [],
       }
     }, { status: 201 });
   } catch (error: any) {
@@ -127,8 +133,20 @@ export async function toggleProductStatus(request: Request, id: string) {
       );
     }
 
-    // Toggle
-    product.status = product.status === 'Active' ? 'Flagged' : 'Active';
+    // Try reading status from request body
+    let newStatus = 'In Stock';
+    try {
+      const body = await request.json();
+      if (body && body.status) {
+        newStatus = body.status;
+      } else {
+        newStatus = product.status === 'In Stock' ? 'Out Of Stock' : 'In Stock';
+      }
+    } catch {
+      newStatus = product.status === 'In Stock' ? 'Out Of Stock' : 'In Stock';
+    }
+
+    product.status = newStatus as any;
     await product.save();
 
     return NextResponse.json({
@@ -216,6 +234,8 @@ export async function updateProduct(request: Request, id: string) {
         featured: product.featured,
         sponsored: product.sponsored,
         image: product.image,
+        colors: product.colors || [],
+        sizes: product.sizes || [],
       }
     });
   } catch (error: any) {

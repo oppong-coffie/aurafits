@@ -259,9 +259,15 @@ export default function AdminDashboardHome() {
                                   />
                                 </div>
                                 <div className="min-w-0">
-                                  <p className="font-bold text-xs text-zinc-900 dark:text-zinc-50 truncate">{ord.productName}</p>
-                                  <div className="flex items-center gap-2 mt-0.5">
+                                  <p className="font-bold text-xs text-zinc-900 dark:text-zinc-55 truncate">{ord.productName}</p>
+                                  <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 mt-0.5">
                                     <span className="text-[10px] text-zinc-450 dark:text-zinc-500 uppercase font-semibold">Qty: {ord.quantity}</span>
+                                    {ord.size && (
+                                      <span className="text-[10px] text-violet-650 dark:text-violet-400 uppercase font-bold">Size: {ord.size}</span>
+                                    )}
+                                    {ord.color && (
+                                      <span className="text-[10px] text-pink-650 dark:text-pink-400 uppercase font-bold">Color: {ord.color}</span>
+                                    )}
                                     {isAccepted && (
                                       <span className="inline-flex bg-emerald-800/25 dark:bg-emerald-955/65 text-emerald-600 dark:text-emerald-450 text-[9px] font-extrabold px-1.5 py-0.2 rounded border border-emerald-500/20 uppercase tracking-wider">
                                         Accepted Order
@@ -401,6 +407,18 @@ export default function AdminDashboardHome() {
                                 )}
                                 <p className="font-extrabold text-zinc-900 dark:text-zinc-100 text-sm mt-2.5 truncate">{ord.userName}</p>
                                 <p className="text-xs text-zinc-550 dark:text-zinc-400 mt-0.5 truncate font-semibold">{ord.productName}</p>
+                                <div className="flex gap-2 mt-1">
+                                  {ord.size && (
+                                    <span className="text-[9px] font-bold bg-violet-50 dark:bg-violet-955/20 text-violet-750 dark:text-violet-400 px-1.5 py-0.5 rounded border border-violet-100 dark:border-violet-900/60 uppercase">
+                                      Size: {ord.size}
+                                    </span>
+                                  )}
+                                  {ord.color && (
+                                    <span className="text-[9px] font-bold bg-pink-50 dark:bg-pink-955/20 text-pink-750 dark:text-pink-400 px-1.5 py-0.5 rounded border border-pink-100 dark:border-pink-900/60 uppercase">
+                                      Color: {ord.color}
+                                    </span>
+                                  )}
+                                </div>
                               </div>
                             </div>
                           </div>
@@ -529,7 +547,11 @@ export default function AdminDashboardHome() {
                     </div>
                     <div className="min-w-0">
                       <p className="font-bold text-zinc-900 dark:text-zinc-100 text-sm truncate">{p.productName}</p>
-                      <p className="text-[10px] text-zinc-400 dark:text-zinc-500 mt-0.5">Customer: {p.userName} &bull; {p.date}</p>
+                      <div className="flex flex-wrap items-center gap-1.5 text-[10px] text-zinc-400 dark:text-zinc-500 mt-0.5">
+                        <span>Customer: {p.userName} &bull; {p.date}</span>
+                        {p.size && <span className="font-bold text-violet-650 dark:text-violet-400">({p.size})</span>}
+                        {p.color && <span className="font-bold text-pink-650 dark:text-pink-400">({p.color})</span>}
+                      </div>
                     </div>
                   </div>
                   <div className="text-right shrink-0">
@@ -572,7 +594,11 @@ export default function AdminDashboardHome() {
                     </div>
                     <div className="min-w-0">
                       <p className="font-bold text-zinc-900 dark:text-zinc-100 text-sm truncate">{p.productName}</p>
-                      <p className="text-[10px] text-zinc-450 dark:text-zinc-500 mt-0.5">Customer: {p.userName} &bull; {p.date}</p>
+                      <div className="flex flex-wrap items-center gap-1.5 text-[10px] text-zinc-400 dark:text-zinc-500 mt-0.5">
+                        <span>Customer: {p.userName} &bull; {p.date}</span>
+                        {p.size && <span className="font-bold text-violet-650 dark:text-violet-400">({p.size})</span>}
+                        {p.color && <span className="font-bold text-pink-650 dark:text-pink-400">({p.color})</span>}
+                      </div>
                     </div>
                   </div>
                   <div className="text-right shrink-0">

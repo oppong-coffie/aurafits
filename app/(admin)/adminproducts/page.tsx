@@ -20,7 +20,7 @@ interface ProductItem {
   price: number;
   rating: number;
   type: string;
-  status: 'Active' | 'Flagged';
+  status: 'In Stock' | 'Out Of Stock' | 'Few Left';
   promo?: boolean;
   flashSale?: boolean;
   oldPrice?: number;
@@ -29,6 +29,8 @@ interface ProductItem {
   featured?: boolean;
   sponsored?: boolean;
   image?: string;
+  colors?: string[];
+  sizes?: string[];
 }
 
 export default function AdminProductsPage() {
@@ -55,7 +57,12 @@ export default function AdminProductsPage() {
   // Edit State
   const [isEditing, setIsEditing] = useState(false);
   const [editingProductId, setEditingProductId] = useState<string | null>(null);
-  const [status, setStatus] = useState<'Active' | 'Flagged'>('Active');
+  const [status, setStatus] = useState<'In Stock' | 'Out Of Stock' | 'Few Left'>('In Stock');
+
+  const [colors, setColors] = useState<string[]>([]);
+  const [sizes, setSizes] = useState<string[]>([]);
+  const [colorInput, setColorInput] = useState('');
+  const [sizeInput, setSizeInput] = useState('');
 
   // Open add product modal
   const handleOpenAddModal = () => {
@@ -72,8 +79,12 @@ export default function AdminProductsPage() {
     setIsTopSelling(false);
     setIsFeatured(false);
     setIsSponsored(false);
-    setStatus('Active');
+    setStatus('In Stock');
     setImageFile(null);
+    setColors([]);
+    setSizes([]);
+    setColorInput('');
+    setSizeInput('');
     setIsModalOpen(true);
   };
 
@@ -94,6 +105,10 @@ export default function AdminProductsPage() {
     setIsSponsored(!!prod.sponsored);
     setStatus(prod.status);
     setImageFile(null);
+    setColors(prod.colors || []);
+    setSizes(prod.sizes || []);
+    setColorInput('');
+    setSizeInput('');
     setIsModalOpen(true);
   };
 
@@ -168,7 +183,9 @@ export default function AdminProductsPage() {
         topSelling: isTopSelling,
         featured: isFeatured,
         sponsored: isSponsored,
-        status: isEditing ? status : 'Active'
+        status: status,
+        colors,
+        sizes
       };
 
       if (uploadedImageUrl) {
@@ -216,17 +233,21 @@ export default function AdminProductsPage() {
     }
   };
 
-  // Toggle Flag/Active Status
-  const handleToggleStatus = async (prodId: string) => {
+  // Update product stock status
+  const handleUpdateProductStatus = async (prodId: string, newStatus: 'In Stock' | 'Out Of Stock' | 'Few Left') => {
     try {
-      const res = await fetch(`/api/products/${prodId}`, { method: 'PATCH' });
+      const res = await fetch(`/api/products/${prodId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus })
+      });
       const data = await res.json();
       if (data.success) {
         setProducts(prev => prev.map(p => {
           if (p.id === prodId) {
             return {
               ...p,
-              status: p.status === 'Active' ? 'Flagged' : 'Active'
+              status: newStatus
             };
           }
           return p;
@@ -235,7 +256,7 @@ export default function AdminProductsPage() {
         alert(data.message || 'Failed to update product status.');
       }
     } catch (error) {
-      console.error('Error toggling status:', error);
+      console.error('Error updating status:', error);
     }
   };
 
@@ -354,20 +375,19 @@ export default function AdminProductsPage() {
                     </select>
                   </div>
 
-                  {isEditing && (
-                    <div className="space-y-1.5">
-                      <label className="text-[10px] font-bold text-zinc-450 dark:text-zinc-500 uppercase tracking-wider block" htmlFor="prod-status">Status</label>
-                      <select
-                        id="prod-status"
-                        className="w-full bg-slate-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-2xl px-3.5 py-3 text-xs text-zinc-900 dark:text-zinc-55 outline-none focus:ring-2 focus:ring-violet-500/25 focus:border-violet-500 transition duration-150 cursor-pointer"
-                        value={status}
-                        onChange={(e) => setStatus(e.target.value as any)}
-                      >
-                        <option value="Active">Active</option>
-                        <option value="Flagged">Flagged (Hidden)</option>
-                      </select>
-                    </div>
-                  )}
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-bold text-zinc-450 dark:text-zinc-500 uppercase tracking-wider block" htmlFor="prod-status">Inventory Status</label>
+                    <select
+                      id="prod-status"
+                      className="w-full bg-slate-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-2xl px-3.5 py-3 text-xs text-zinc-900 dark:text-zinc-55 outline-none focus:ring-2 focus:ring-violet-500/25 focus:border-violet-500 transition duration-150 cursor-pointer"
+                      value={status}
+                      onChange={(e) => setStatus(e.target.value as any)}
+                    >
+                      <option value="In Stock">In Stock</option>
+                      <option value="Few Left">Few Left</option>
+                      <option value="Out Of Stock">Out Of Stock</option>
+                    </select>
+                  </div>
 
                   <div className="space-y-1.5 sm:col-span-2">
                     <label className="text-[10px] font-bold text-zinc-450 dark:text-zinc-500 uppercase tracking-wider block mb-1.5" htmlFor="prod-image">Product Image File</label>
@@ -389,6 +409,114 @@ export default function AdminProductsPage() {
                       </span>
                       <span className="text-[9px] text-zinc-400 dark:text-zinc-500 tracking-wider uppercase font-semibold">PNG, JPG, WEBP formats</span>
                     </div>
+                  </div>
+
+                  {/* Colors Input */}
+                  <div className="space-y-1.5 sm:col-span-2">
+                    <label className="text-[10px] font-bold text-zinc-450 dark:text-zinc-500 uppercase tracking-wider block">Available Colors</label>
+                    <div className="flex gap-2 mb-2">
+                      <input
+                        type="text"
+                        className="flex-1 bg-slate-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2 text-xs text-zinc-900 dark:text-zinc-55 outline-none focus:ring-2 focus:ring-violet-500/25"
+                        placeholder="Type color e.g. Black"
+                        value={colorInput}
+                        onChange={(e) => setColorInput(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault();
+                            if (colorInput.trim() && !colors.includes(colorInput.trim())) {
+                              setColors([...colors, colorInput.trim()]);
+                              setColorInput('');
+                            }
+                          }
+                        }}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (colorInput.trim() && !colors.includes(colorInput.trim())) {
+                            setColors([...colors, colorInput.trim()]);
+                            setColorInput('');
+                          }
+                        }}
+                        className="bg-zinc-900 hover:bg-zinc-805 dark:bg-zinc-50 dark:hover:bg-zinc-150 text-white dark:text-zinc-900 px-4 rounded-xl text-xs font-bold transition cursor-pointer"
+                      >
+                        Add
+                      </button>
+                    </div>
+                    {colors.length > 0 && (
+                      <div className="flex flex-wrap gap-1.5 p-2 bg-slate-50 dark:bg-zinc-950/65 rounded-xl border border-zinc-150 dark:border-zinc-800/40">
+                        {colors.map((c) => (
+                          <span
+                            key={c}
+                            className="inline-flex items-center gap-1 bg-pink-50 dark:bg-pink-955/25 text-pink-700 dark:text-pink-400 border border-pink-100 dark:border-pink-900/60 px-2 py-0.5 rounded-lg text-[10px] font-bold"
+                          >
+                            <span>{c}</span>
+                            <button
+                              type="button"
+                              onClick={() => setColors(colors.filter((x) => x !== c))}
+                              className="text-pink-650 hover:text-pink-850 dark:text-pink-400 font-bold transition-colors cursor-pointer"
+                            >
+                              <X size={10} className="stroke-[2.5]" />
+                            </button>
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Sizes Input */}
+                  <div className="space-y-1.5 sm:col-span-2">
+                    <label className="text-[10px] font-bold text-zinc-450 dark:text-zinc-500 uppercase tracking-wider block">Available Sizes</label>
+                    <div className="flex gap-2 mb-2">
+                      <input
+                        type="text"
+                        className="flex-1 bg-slate-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2 text-xs text-zinc-900 dark:text-zinc-55 outline-none focus:ring-2 focus:ring-violet-500/25"
+                        placeholder="Type size e.g. M, L, 42"
+                        value={sizeInput}
+                        onChange={(e) => setSizeInput(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault();
+                            if (sizeInput.trim() && !sizes.includes(sizeInput.trim())) {
+                              setSizes([...sizes, sizeInput.trim()]);
+                              setSizeInput('');
+                            }
+                          }
+                        }}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (sizeInput.trim() && !sizes.includes(sizeInput.trim())) {
+                            setSizes([...sizes, sizeInput.trim()]);
+                            setSizeInput('');
+                          }
+                        }}
+                        className="bg-zinc-900 hover:bg-zinc-805 dark:bg-zinc-50 dark:hover:bg-zinc-150 text-white dark:text-zinc-900 px-4 rounded-xl text-xs font-bold transition cursor-pointer"
+                      >
+                        Add
+                      </button>
+                    </div>
+                    {sizes.length > 0 && (
+                      <div className="flex flex-wrap gap-1.5 p-2 bg-slate-50 dark:bg-zinc-950/65 rounded-xl border border-zinc-150 dark:border-zinc-800/40">
+                        {sizes.map((s) => (
+                          <span
+                            key={s}
+                            className="inline-flex items-center gap-1 bg-violet-50 dark:bg-violet-955/25 text-violet-700 dark:text-violet-400 border border-violet-100 dark:border-violet-900/60 px-2 py-0.5 rounded-lg text-[10px] font-bold"
+                          >
+                            <span>{s}</span>
+                            <button
+                              type="button"
+                              onClick={() => setSizes(sizes.filter((x) => x !== s))}
+                              className="text-violet-650 hover:text-violet-850 dark:text-violet-400 font-bold transition-colors cursor-pointer"
+                            >
+                              <X size={10} className="stroke-[2.5]" />
+                            </button>
+                          </span>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -593,6 +721,16 @@ export default function AdminProductsPage() {
                               Flash Sale (${prod.oldPrice} → ${prod.newPrice})
                             </span>
                           )}
+                          {prod.sizes && prod.sizes.length > 0 && (
+                            <span className="text-[9px] text-zinc-400 dark:text-zinc-550 font-semibold block mt-1.5">
+                              Sizes: {prod.sizes.join(', ')}
+                            </span>
+                          )}
+                          {prod.colors && prod.colors.length > 0 && (
+                            <span className="text-[9px] text-zinc-400 dark:text-zinc-550 font-semibold block">
+                              Colors: {prod.colors.join(', ')}
+                            </span>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -613,17 +751,21 @@ export default function AdminProductsPage() {
                       ${prod.price}
                     </td>
                     <td className="px-6 py-4">
-                      {prod.status === 'Active' ? (
-                        <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-955/20 border border-emerald-100 dark:border-emerald-900/60 px-2 py-0.5 rounded-lg">
-                          <CheckCircle size={10} />
-                          Active
-                        </span>
-                      ) : (
-                        <span className="inline-flex items-center gap-1 text-[10px] font-bold text-rose-600 bg-rose-50 dark:bg-rose-955/20 border border-rose-100 dark:border-rose-900/60 px-2 py-0.5 rounded-lg animate-pulse">
-                          <AlertOctagon size={10} />
-                          Flagged (Hidden)
-                        </span>
-                      )}
+                      <select
+                        value={prod.status}
+                        onChange={(e) => handleUpdateProductStatus(prod.id, e.target.value as any)}
+                        className={`px-2.5 py-1 rounded-xl text-[11px] font-bold border cursor-pointer outline-none transition duration-150 uppercase tracking-wider ${
+                          prod.status === 'In Stock'
+                            ? 'bg-emerald-50 dark:bg-emerald-955/20 border-emerald-250 dark:border-emerald-900/60 text-emerald-600 dark:text-emerald-400 font-extrabold'
+                            : prod.status === 'Few Left'
+                            ? 'bg-amber-50 dark:bg-amber-955/25 border-amber-250 dark:border-amber-900/60 text-amber-650 dark:text-amber-400 font-extrabold'
+                            : 'bg-rose-50 dark:bg-rose-955/25 border-rose-250 dark:border-rose-900/60 text-rose-600 dark:text-rose-450 font-extrabold'
+                        }`}
+                      >
+                        <option value="In Stock" className="bg-white dark:bg-zinc-900 text-zinc-800 dark:text-zinc-200">In Stock</option>
+                        <option value="Few Left" className="bg-white dark:bg-zinc-900 text-zinc-800 dark:text-zinc-200">Few Left</option>
+                        <option value="Out Of Stock" className="bg-white dark:bg-zinc-900 text-zinc-800 dark:text-zinc-200">Out Of Stock</option>
+                      </select>
                     </td>
                     <td className="px-6 py-4 text-right">
                       <div className="flex items-center gap-2 justify-end">

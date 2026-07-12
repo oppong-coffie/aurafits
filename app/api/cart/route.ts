@@ -59,7 +59,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const { productId } = await request.json();
+    const { productId, size, color } = await request.json();
     if (!productId) {
       return NextResponse.json(
         { success: false, message: 'Product ID is required.' },
@@ -82,6 +82,8 @@ export async function POST(request: Request) {
     const existingItem = await Cart.findOne({
       userId: session.userId,
       productId: productId,
+      size: size || null,
+      color: color || null,
       status: { $in: ['pending', 'cart', null, undefined] }
     });
 
@@ -98,6 +100,8 @@ export async function POST(request: Request) {
         userId: session.userId,
         productId: productId,
         quantity: 1,
+        size: size || null,
+        color: color || null,
         status: 'pending'
       });
       return NextResponse.json({
@@ -126,15 +130,83 @@ export async function PATCH(request: Request) {
       );
     }
 
-    const { productId, quantity, status } = await request.json();
+    const { cartItemId, productId, quantity, status, size, color } = await request.json();
+    if (!productId && !cartItemId) {
+      return NextResponse.json(
+        { success: false, message: 'Product ID or Cart Item ID is required.' },
+        { status: 400 }
+      );
+    }
+
+    await dbConnect();
+
+    // If updating size or color using cartItemId
+    if (cartItemId && (size !== undefined || color !== undefined)) {
+      const currentItem = await Cart.findOne({ _id: cartItemId, userId: session.userId });
+      if (!currentItem) {
+        return NextResponse.json(
+          { success: false, message: 'Item not found in cart.' },
+          { status: 404 }
+        );
+      }
+
+      const targetSize = size !== undefined ? size : currentItem.size;
+      const targetColor = color !== undefined ? color : currentItem.color;
+
+      // Check if there is another item in the cart with the target size/color
+      const duplicateItem = await Cart.findOne({
+        userId: session.userId,
+        productId: currentItem.productId,
+        size: targetSize || null,
+        color: targetColor || null,
+        status: currentItem.status,
+        _id: { $ne: currentItem._id }
+      });
+
+      if (duplicateItem) {
+        // Merge items!
+        duplicateItem.quantity += currentItem.quantity;
+        await duplicateItem.save();
+        await Cart.findByIdAndDelete(currentItem._id);
+
+        await duplicateItem.populate({
+          path: 'productId',
+          model: Product
+        });
+
+        return NextResponse.json({
+          success: true,
+          message: 'Items merged in cart.',
+          merged: true,
+          deletedId: currentItem._id,
+          updatedItem: duplicateItem
+        });
+      } else {
+        // Update item
+        currentItem.size = targetSize;
+        currentItem.color = targetColor;
+        await currentItem.save();
+
+        await currentItem.populate({
+          path: 'productId',
+          model: Product
+        });
+
+        return NextResponse.json({
+          success: true,
+          message: 'Cart item options updated.',
+          cartItem: currentItem
+        });
+      }
+    }
+
+    // Fallback: standard checks for legacy routes relying on productId
     if (!productId) {
       return NextResponse.json(
         { success: false, message: 'Product ID is required.' },
         { status: 400 }
       );
     }
-
-    await dbConnect();
 
     // If status transition is requested (moving between cart and wishlist)
     if (status) {
@@ -143,11 +215,15 @@ export async function PATCH(request: Request) {
         ? { $in: ['pending', 'cart', null, undefined] }
         : 'wish';
       
-      const currentItem = await Cart.findOne({
+      const currentQuery: any = {
         userId: session.userId,
         productId: productId,
         status: searchFilter
-      });
+      };
+      if (size !== undefined) currentQuery.size = size || null;
+      if (color !== undefined) currentQuery.color = color || null;
+
+      const currentItem = await Cart.findOne(currentQuery);
 
       if (!currentItem) {
         return NextResponse.json(
@@ -157,11 +233,15 @@ export async function PATCH(request: Request) {
       }
 
       // Check if there is already an item in the target status
-      const targetItem = await Cart.findOne({
+      const targetQuery: any = {
         userId: session.userId,
         productId: productId,
         status: status
-      });
+      };
+      if (size !== undefined) targetQuery.size = size || null;
+      if (color !== undefined) targetQuery.color = color || null;
+
+      const targetItem = await Cart.findOne(targetQuery);
 
       if (targetItem) {
         // Merge!
@@ -194,8 +274,16 @@ export async function PATCH(request: Request) {
         );
       }
 
+      const updateQuery: any = {
+        userId: session.userId,
+        productId: productId,
+        status: { $in: ['pending', 'cart', null, undefined] }
+      };
+      if (size !== undefined) updateQuery.size = size || null;
+      if (color !== undefined) updateQuery.color = color || null;
+
       const updatedItem = await Cart.findOneAndUpdate(
-        { userId: session.userId, productId: productId, status: { $in: ['pending', 'cart', null, undefined] } },
+        updateQuery,
         { quantity: quantity },
         { new: true }
       );
@@ -221,7 +309,7 @@ export async function PATCH(request: Request) {
   } catch (error: any) {
     console.error('PATCH /api/cart error:', error);
     return NextResponse.json(
-      { success: false, message: 'Failed to update quantity: ' + error.message },
+      { success: false, message: 'Failed to update: ' + error.message },
       { status: 500 }
     );
   }
@@ -241,6 +329,8 @@ export async function DELETE(request: Request) {
     const { searchParams } = new URL(request.url);
     const productId = searchParams.get('productId');
     const status = searchParams.get('status') || 'pending';
+    const size = searchParams.get('size');
+    const color = searchParams.get('color');
 
     if (!productId) {
       return NextResponse.json(
@@ -255,11 +345,15 @@ export async function DELETE(request: Request) {
       ? { $in: ['pending', 'cart', null, undefined] }
       : status;
 
-    const deleted = await Cart.findOneAndDelete({
+    const deleteQuery: any = {
       userId: session.userId,
       productId: productId,
       status: deleteFilter
-    });
+    };
+    if (size !== null && size !== undefined) deleteQuery.size = size || null;
+    if (color !== null && color !== undefined) deleteQuery.color = color || null;
+
+    const deleted = await Cart.findOneAndDelete(deleteQuery);
 
     if (!deleted) {
       return NextResponse.json(
