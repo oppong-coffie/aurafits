@@ -173,7 +173,7 @@ export default function AllProducts({ products = [] }: AllProductsProps) {
                   {/* Pricing & Rating Row */}
                   <div className="px-2 mt-4 pt-3.5 border-t border-zinc-200/40 dark:border-zinc-800/40">
                     <div className="flex items-center justify-between">
-                      <span className="font-extrabold text-base text-zinc-900 dark:text-zinc-50">${prod.price}</span>
+                      <span className="font-extrabold text-base text-zinc-900 dark:text-zinc-50">GH₵{prod.price}</span>
                       <div className="flex items-center gap-1 bg-zinc-100 dark:bg-zinc-900 px-2 py-0.5 rounded-full border border-zinc-200/40 dark:border-zinc-800/40">
                         <Star className="w-3 h-3 fill-amber-400 stroke-amber-400 text-amber-400" />
                         <span className="text-[10px] font-bold text-zinc-700 dark:text-zinc-300">{prod.rating || 4.5}</span>

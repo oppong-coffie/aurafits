@@ -46,6 +46,26 @@ export default function CartContent({ initialItems = [] }: CartContentProps) {
   const [itemToRemove, setItemToRemove] = useState<CartItem | null>(null);
   const [isCheckoutLoading, setIsCheckoutLoading] = useState(false);
 
+  // Check query parameters for failed payments
+  React.useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const payment = params.get('payment');
+      const reason = params.get('reason');
+      if (payment === 'failed') {
+        let errorMsg = 'Payment was not successful. Please try again.';
+        if (reason === 'transaction_not_successful') {
+          errorMsg = 'Transaction was declined or cancelled. Please try again.';
+        } else if (reason === 'no_reference') {
+          errorMsg = 'No transaction reference found. Please try again.';
+        }
+        window.dispatchEvent(new CustomEvent('show-toast', {
+          detail: { message: errorMsg, type: 'error' }
+        }));
+      }
+    }
+  }, []);
+
   // Update quantity handler
   const handleUpdateQuantity = async (productId: string, currentQty: number, delta: number, size?: string, color?: string) => {
     const newQty = currentQty + delta;
@@ -191,18 +211,18 @@ export default function CartContent({ initialItems = [] }: CartContentProps) {
   const handleCheckout = async () => {
     setIsCheckoutLoading(true);
     try {
-      const res = await fetch('/api/cart/checkout', {
+      const res = await fetch('/api/paystack/initialize', {
         method: 'POST',
       });
       const data = await res.json();
-      if (data.success) {
-        window.location.href = '/orders';
+      if (data.success && data.authorization_url) {
+        window.location.href = data.authorization_url;
       } else {
-        alert(data.message || 'Checkout failed.');
+        alert(data.message || 'Payment initialization failed.');
       }
     } catch (err) {
-      console.error('Checkout error:', err);
-      alert('An error occurred during checkout.');
+      console.error('Paystack initialization error:', err);
+      alert('An error occurred while initiating payment.');
     } finally {
       setIsCheckoutLoading(false);
     }
@@ -344,7 +364,7 @@ export default function CartContent({ initialItems = [] }: CartContentProps) {
                           
                           {/* Price */}
                           <span className="font-extrabold text-base md:text-lg text-zinc-900 dark:text-zinc-50 shrink-0">
-                            ${p.price * item.quantity}
+                            GH₵{p.price * item.quantity}
                           </span>
                         </div>
                       </div>
@@ -404,28 +424,28 @@ export default function CartContent({ initialItems = [] }: CartContentProps) {
                 <div className="space-y-3.5 text-sm font-semibold">
                   <div className="flex justify-between text-zinc-550 dark:text-zinc-400">
                     <span>Subtotal</span>
-                    <span className="text-zinc-900 dark:text-zinc-50">${subtotal}</span>
+                    <span className="text-zinc-900 dark:text-zinc-50">GH₵{subtotal}</span>
                   </div>
                   <div className="flex justify-between text-zinc-550 dark:text-zinc-400">
                     <span>Shipping</span>
                     <span className="text-zinc-900 dark:text-zinc-50">
-                      {shipping === 0 ? <span className="text-emerald-600 dark:text-emerald-450 font-bold uppercase text-xs">Free</span> : `$${shipping}`}
+                      {shipping === 0 ? <span className="text-emerald-600 dark:text-emerald-450 font-bold uppercase text-xs">Free</span> : `GH₵${shipping}`}
                     </span>
                   </div>
                   <div className="flex justify-between text-zinc-550 dark:text-zinc-400">
                     <span>Estimated Tax (8%)</span>
-                    <span className="text-zinc-900 dark:text-zinc-50">${tax}</span>
+                    <span className="text-zinc-900 dark:text-zinc-50">GH₵{tax}</span>
                   </div>
                   
                   {shipping > 0 && (
                     <p className="text-[10px] text-zinc-400 mt-1 bg-zinc-50 dark:bg-zinc-900/60 p-2 rounded-xl border border-zinc-200/20 dark:border-zinc-800/30">
-                      💡 Tip: Add ${(200 - subtotal)} more to qualify for Free Shipping!
+                      💡 Tip: Add GH₵{(200 - subtotal)} more to qualify for Free Shipping!
                     </p>
                   )}
                   
                   <div className="flex justify-between text-base font-extrabold text-zinc-900 dark:text-zinc-50 pt-4 border-t border-zinc-150 dark:border-zinc-800">
                     <span>Total</span>
-                    <span>${total}</span>
+                    <span>GH₵{total}</span>
                   </div>
                 </div>
 
@@ -438,7 +458,7 @@ export default function CartContent({ initialItems = [] }: CartContentProps) {
                   {isCheckoutLoading && (
                     <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
                   )}
-                  <span>Proceed to Checkout</span>
+                  <span>Proceed to Payment</span>
                 </button>
               </div>
 

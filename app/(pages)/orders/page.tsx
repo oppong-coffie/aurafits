@@ -28,7 +28,7 @@ export default async function OrdersPage() {
     }
 
     await dbConnect();
-    const dbUser = await User.findById(session.userId);
+    const dbUser = await User.findById(session.userId).lean();
     if (!dbUser) {
       redirect('/login');
     }
@@ -37,6 +37,7 @@ export default async function OrdersPage() {
       id: dbUser._id.toString(),
       name: dbUser.name,
       email: dbUser.email,
+      role: (dbUser as any).role || 'user',
       createdAt: dbUser.createdAt,
     };
 

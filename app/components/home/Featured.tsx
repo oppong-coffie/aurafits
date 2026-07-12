@@ -132,7 +132,7 @@ export default function Featured({ products = [] }: FeaturedProps) {
               {/* Pricing & Rating Row */}
               <div className="px-1 mt-4 pt-3.5 border-t border-zinc-200/40 dark:border-zinc-800/50">
                 <div className="flex items-center justify-between">
-                  <span className="font-extrabold text-base md:text-lg text-zinc-900 dark:text-zinc-50">${prod.price}</span>
+                  <span className="font-extrabold text-base md:text-lg text-zinc-900 dark:text-zinc-50">GH₵{prod.price}</span>
                   <div className="flex items-center gap-1 bg-zinc-100 dark:bg-zinc-900 px-2.5 py-1 rounded-full border border-zinc-200/40 dark:border-zinc-800/40">
                     <Star className="w-3.5 h-3.5 fill-amber-455 stroke-amber-455 text-amber-455" />
                     <span className="text-xs font-bold text-zinc-700 dark:text-zinc-300">{prod.rating}</span>

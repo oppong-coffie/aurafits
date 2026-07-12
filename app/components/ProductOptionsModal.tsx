@@ -138,7 +138,7 @@ export default function ProductOptionsModal() {
                   {product.name}
                 </h4>
                 <p className="font-extrabold text-xs text-zinc-700 dark:text-zinc-300">
-                  ${product.price}
+                  GH₵{product.price}
                 </p>
                 {product.status && (
                   <span className={`self-start text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider border ${

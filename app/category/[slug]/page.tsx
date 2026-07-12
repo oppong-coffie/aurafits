@@ -64,12 +64,13 @@ export default async function CategoryPage({ params }: PageProps) {
     await dbConnect();
     const session = await getSession();
     if (session && session.userId) {
-      const dbUser = await User.findById(session.userId);
+      const dbUser = await User.findById(session.userId).lean();
       if (dbUser) {
         activeUser = {
           id: dbUser._id.toString(),
           name: dbUser.name,
           email: dbUser.email,
+          role: (dbUser as any).role || 'user',
           createdAt: dbUser.createdAt,
         };
       }

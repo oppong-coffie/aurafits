@@ -212,8 +212,23 @@ export async function updateProduct(request: Request, id: string) {
       );
     }
 
-    // Update fields
-    Object.assign(product, result.data);
+    // Update fields safely - avoid assigning undefined arrays to mongoose document
+    const updateData = { ...result.data };
+    
+    if (updateData.colors === undefined) delete updateData.colors;
+    if (updateData.sizes === undefined) delete updateData.sizes;
+    
+    if (updateData.flashSale === false) {
+      product.oldPrice = undefined;
+      product.newPrice = undefined;
+    }
+    
+    Object.keys(updateData).forEach((key) => {
+      if (updateData[key] !== undefined) {
+        (product as any)[key] = updateData[key];
+      }
+    });
+
     await product.save();
 
     return NextResponse.json({
@@ -241,7 +256,7 @@ export async function updateProduct(request: Request, id: string) {
   } catch (error: any) {
     console.error('updateProduct controller error:', error);
     return NextResponse.json(
-      { success: false, message: 'Failed to update product in database.' },
+      { success: false, message: 'Failed to update product in database: ' + error.message },
       { status: 500 }
     );
   }

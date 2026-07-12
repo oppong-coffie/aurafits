@@ -347,7 +347,7 @@ export default function AdminProductsPage() {
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-[10px] font-bold text-zinc-400 dark:text-zinc-400 uppercase tracking-wider block" htmlFor="prod-price">Price ($)</label>
+                    <label className="text-[10px] font-bold text-zinc-400 dark:text-zinc-400 uppercase tracking-wider block" htmlFor="prod-price">Price (GH₵)</label>
                     <input
                       id="prod-price"
                       type="number"
@@ -585,7 +585,7 @@ export default function AdminProductsPage() {
                           className="grid grid-cols-2 gap-3 mt-2 overflow-hidden"
                         >
                           <div className="space-y-1.5 pb-2">
-                            <label className="text-[9px] font-bold text-zinc-400 dark:text-zinc-400 uppercase tracking-wider block" htmlFor="old-price">Old Price ($)</label>
+                            <label className="text-[9px] font-bold text-zinc-400 dark:text-zinc-400 uppercase tracking-wider block" htmlFor="old-price">Old Price (GH₵)</label>
                             <input
                               id="old-price"
                               type="number"
@@ -598,7 +598,7 @@ export default function AdminProductsPage() {
                             />
                           </div>
                           <div className="space-y-1.5 pb-2">
-                            <label className="text-[9px] font-bold text-zinc-400 dark:text-zinc-400 uppercase tracking-wider block" htmlFor="new-price">New Price ($)</label>
+                            <label className="text-[9px] font-bold text-zinc-400 dark:text-zinc-400 uppercase tracking-wider block" htmlFor="new-price">New Price (GH₵)</label>
                             <input
                               id="new-price"
                               type="number"
@@ -748,7 +748,7 @@ export default function AdminProductsPage() {
                       </div>
                     </td>
                     <td className="px-6 py-4 font-extrabold text-zinc-900 dark:text-zinc-50 font-mono">
-                      ${prod.price}
+                      GH₵{prod.price}
                     </td>
                     <td className="px-6 py-4">
                       <select

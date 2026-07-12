@@ -21,6 +21,7 @@ interface NavbarProps {
     id: string;
     name: string;
     email: string;
+    role?: string;
     createdAt?: any;
   } | null;
   logoutAction: () => Promise<void>;
@@ -215,14 +216,16 @@ export default function Navbar({ activeUser, logoutAction }: NavbarProps) {
                   <span>Wishlist</span>
                 </Link>
 
-                <Link 
-                  href="/adminhome" 
-                  onClick={() => setIsOpen(false)}
-                  className="flex items-center gap-2.5 px-4 py-2 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors w-full text-left font-semibold"
-                >
-                  <ShieldCheck size={16} className="text-violet-555 dark:text-violet-400" />
-                  <span>Admin Panel</span>
-                </Link>
+                {activeUser.role === 'admin' && (
+                  <Link 
+                    href="/adminhome" 
+                    onClick={() => setIsOpen(false)}
+                    className="flex items-center gap-2.5 px-4 py-2 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors w-full text-left font-semibold"
+                  >
+                    <ShieldCheck size={16} className="text-violet-600 dark:text-violet-400" />
+                    <span>Admin Panel</span>
+                  </Link>
+                )}
 
                 <div className="border-t border-zinc-100 dark:border-zinc-800 mt-1 pt-1">
                   <form action={logoutAction} onSubmit={() => setIsOpen(false)}>

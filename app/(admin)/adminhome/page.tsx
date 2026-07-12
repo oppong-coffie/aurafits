@@ -290,7 +290,7 @@ export default function AdminDashboardHome() {
 
                             {/* Value */}
                             <td className="px-5 py-4 text-right">
-                              <span className="font-extrabold text-xs text-zinc-900 dark:text-zinc-50">${ord.totalValue}</span>
+                              <span className="font-extrabold text-xs text-zinc-900 dark:text-zinc-50">GH₵{ord.totalValue}</span>
                             </td>
 
                             {/* Action Buttons */}
@@ -430,7 +430,7 @@ export default function AdminDashboardHome() {
                             </div>
                             <div className="text-right">
                               <span className="text-[10px] text-zinc-400 dark:text-zinc-500 block">Total</span>
-                              <span className="font-black text-sm text-zinc-900 dark:text-zinc-50">${ord.totalValue}</span>
+                              <span className="font-black text-sm text-zinc-900 dark:text-zinc-50">GH₵{ord.totalValue}</span>
                             </div>
                           </div>
                         </div>
