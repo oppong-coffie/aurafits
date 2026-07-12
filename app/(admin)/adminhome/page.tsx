@@ -89,13 +89,13 @@ export default function AdminDashboardHome() {
   if (isLoading) {
     return (
       <div className="max-w-6xl mx-auto px-6 py-12 space-y-10 animate-pulse">
-        <div className="h-8 bg-zinc-200 dark:bg-zinc-800 rounded-lg w-1/3" />
+        <div className="h-8 bg-zinc-200 dark:bg-zinc-700 rounded-lg w-1/3" />
         <div className="grid grid-cols-1 sm:grid-cols-4 gap-6">
           {[...Array(4)].map((_, i) => (
-            <div key={i} className="h-24 bg-zinc-200 dark:bg-zinc-800 rounded-3xl" />
+            <div key={i} className="h-24 bg-zinc-200 dark:bg-zinc-700 rounded-3xl" />
           ))}
         </div>
-        <div className="h-96 bg-zinc-200 dark:bg-zinc-800 rounded-3xl" />
+        <div className="h-96 bg-zinc-200 dark:bg-zinc-700 rounded-3xl" />
       </div>
     );
   }
@@ -113,14 +113,14 @@ export default function AdminDashboardHome() {
           <h1 className="text-3xl md:text-4xl font-extrabold text-zinc-900 dark:text-zinc-50 tracking-tight mt-2.5">
             Admin Dashboard
           </h1>
-          <p className="text-xs text-zinc-555 dark:text-zinc-400 mt-1">
+          <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
             Analyze live sales velocity and manage pending checkout orders.
           </p>
         </div>
         
         <button 
           onClick={fetchDashboardData}
-          className="inline-flex items-center gap-2 text-xs font-bold text-zinc-650 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 bg-white dark:bg-zinc-900/65 px-4 py-2.5 rounded-2xl border border-zinc-200/50 dark:border-zinc-800/80 shadow-sm cursor-pointer hover:shadow transition duration-150"
+          className="inline-flex items-center gap-2 text-xs font-bold text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 bg-white dark:bg-zinc-900 px-4 py-2.5 rounded-2xl border border-zinc-200/50 dark:border-zinc-800 shadow-sm cursor-pointer hover:shadow transition duration-150"
         >
           <RotateCcw size={13} className="animate-spin-slow" />
           <span>Refresh Live Data</span>
@@ -131,7 +131,7 @@ export default function AdminDashboardHome() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <motion.div 
           whileHover={{ y: -3, scale: 1.01 }}
-          className="bg-white dark:bg-zinc-900/40 border border-zinc-200/50 dark:border-zinc-850/45 rounded-3xl p-5 shadow-sm flex items-center gap-4 transition duration-205 hover:shadow-md"
+          className="bg-white dark:bg-zinc-900 border border-zinc-200/50 dark:border-zinc-800 rounded-3xl p-5 shadow-sm flex items-center gap-4 transition duration-200 hover:shadow-md"
         >
           <div className="bg-violet-50 dark:bg-violet-950/30 p-3.5 rounded-2xl text-violet-600 dark:text-violet-400">
             <ShoppingBag size={20} />
@@ -144,7 +144,7 @@ export default function AdminDashboardHome() {
 
         <motion.div 
           whileHover={{ y: -3, scale: 1.01 }}
-          className="bg-white dark:bg-zinc-900/40 border border-zinc-200/50 dark:border-zinc-850/45 rounded-3xl p-5 shadow-sm flex items-center gap-4 transition duration-205 hover:shadow-md"
+          className="bg-white dark:bg-zinc-900 border border-zinc-200/50 dark:border-zinc-800 rounded-3xl p-5 shadow-sm flex items-center gap-4 transition duration-200 hover:shadow-md"
         >
           <div className="bg-amber-50 dark:bg-amber-950/30 p-3.5 rounded-2xl text-amber-600 dark:text-amber-400 animate-pulse">
             <Clock size={20} />
@@ -157,9 +157,9 @@ export default function AdminDashboardHome() {
 
         <motion.div 
           whileHover={{ y: -3, scale: 1.01 }}
-          className="bg-white dark:bg-zinc-900/40 border border-zinc-200/50 dark:border-zinc-850/45 rounded-3xl p-5 shadow-sm flex items-center gap-4 transition duration-205 hover:shadow-md"
+          className="bg-white dark:bg-zinc-900 border border-zinc-200/50 dark:border-zinc-800 rounded-3xl p-5 shadow-sm flex items-center gap-4 transition duration-200 hover:shadow-md"
         >
-          <div className="bg-emerald-50 dark:bg-emerald-950/30 p-3.5 rounded-2xl text-emerald-600 dark:text-emerald-455">
+          <div className="bg-emerald-50 dark:bg-emerald-950/30 p-3.5 rounded-2xl text-emerald-600 dark:text-emerald-400">
             <CheckCircle2 size={20} />
           </div>
           <div>
@@ -170,9 +170,9 @@ export default function AdminDashboardHome() {
 
         <motion.div 
           whileHover={{ y: -3, scale: 1.01 }}
-          className="bg-white dark:bg-zinc-900/40 border border-zinc-200/50 dark:border-zinc-850/45 rounded-3xl p-5 shadow-sm flex items-center gap-4 transition duration-205 hover:shadow-md"
+          className="bg-white dark:bg-zinc-900 border border-zinc-200/50 dark:border-zinc-800 rounded-3xl p-5 shadow-sm flex items-center gap-4 transition duration-200 hover:shadow-md"
         >
-          <div className="bg-rose-50 dark:bg-rose-955/30 p-3.5 rounded-2xl text-rose-600 dark:text-rose-455">
+          <div className="bg-rose-50 dark:bg-rose-950/30 p-3.5 rounded-2xl text-rose-600 dark:text-rose-400">
             <XCircle size={20} />
           </div>
           <div>
@@ -183,18 +183,18 @@ export default function AdminDashboardHome() {
       </div>
 
       {/* Section: Pending Orders (Stretched full-width with List/Grid Layout option) */}
-      <div className="bg-white dark:bg-zinc-900/40 border border-zinc-200/50 dark:border-zinc-805/45 rounded-3xl overflow-hidden shadow-sm">
-        <div className="px-6 py-4.5 border-b border-zinc-100 dark:border-zinc-800/60 bg-zinc-50/50 dark:bg-zinc-900/20 flex items-center justify-between">
-          <h2 className="text-xs font-extrabold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest">Pending Orders</h2>
+      <div className="bg-white dark:bg-zinc-900 border border-zinc-200/50 dark:border-zinc-800 rounded-3xl overflow-hidden shadow-sm">
+        <div className="px-6 py-4 border-b border-zinc-100 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/50 flex items-center justify-between">
+          <h2 className="text-xs font-extrabold text-zinc-400 dark:text-zinc-400 uppercase tracking-widest">Pending Orders</h2>
           
           {/* Display Mode Toggle */}
-          <div className="flex bg-zinc-200/60 dark:bg-zinc-950/60 p-1 rounded-xl border border-zinc-200/20 dark:border-zinc-850/40">
+          <div className="flex bg-zinc-200/60 dark:bg-zinc-950 p-1 rounded-xl border border-zinc-200/20 dark:border-zinc-800">
             <button
               onClick={() => setDisplayMode('list')}
               className={`p-1.5 rounded-lg transition duration-150 cursor-pointer flex items-center gap-1 ${
                 displayMode === 'list' 
-                  ? 'bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-550 shadow-sm' 
-                  : 'text-zinc-455 hover:text-zinc-700'
+                  ? 'bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 shadow-sm' 
+                  : 'text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200'
               }`}
               title="List View"
             >
@@ -205,8 +205,8 @@ export default function AdminDashboardHome() {
               onClick={() => setDisplayMode('grid')}
               className={`p-1.5 rounded-lg transition duration-150 cursor-pointer flex items-center gap-1 ${
                 displayMode === 'grid' 
-                  ? 'bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-550 shadow-sm' 
-                  : 'text-zinc-455 hover:text-zinc-700'
+                  ? 'bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 shadow-sm' 
+                  : 'text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200'
               }`}
               title="Grid View"
             >
@@ -224,7 +224,7 @@ export default function AdminDashboardHome() {
                 <div className="overflow-x-auto w-full">
                   <table className="w-full text-left border-collapse min-w-[750px]">
                     <thead>
-                      <tr className="border-b border-zinc-150 dark:border-zinc-800 text-[10px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest bg-zinc-50/20 dark:bg-zinc-900/10">
+                      <tr className="border-b border-zinc-100 dark:border-zinc-800 text-[10px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest bg-zinc-50/20 dark:bg-zinc-900/30">
                         <th className="px-5 py-3">Product</th>
                         <th className="px-5 py-3">Customer</th>
                         <th className="px-5 py-3">Date</th>
@@ -232,7 +232,7 @@ export default function AdminDashboardHome() {
                         <th className="px-5 py-3 text-center">Actions</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-zinc-100 dark:divide-zinc-850">
+                    <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800">
                       {orders.map((ord, idx) => {
                         const isAccepted = ord.status === 'accepted';
                         return (
@@ -251,7 +251,7 @@ export default function AdminDashboardHome() {
                             {/* Product Image & Name */}
                             <td className="px-5 py-4 min-w-[200px]">
                               <div className="flex items-center gap-3">
-                                <div className="relative aspect-[3/4] w-10 rounded-lg overflow-hidden bg-zinc-100 dark:bg-zinc-900 shrink-0 border border-zinc-200/30 dark:border-zinc-800/30">
+                                <div className="relative aspect-[3/4] w-10 rounded-lg overflow-hidden bg-zinc-100 dark:bg-zinc-800 shrink-0 border border-zinc-200/30 dark:border-zinc-700">
                                   <img 
                                     src={ord.productImage || `/featured${(idx % 4) + 1}.jpg`} 
                                     alt={ord.productName}
@@ -259,17 +259,17 @@ export default function AdminDashboardHome() {
                                   />
                                 </div>
                                 <div className="min-w-0">
-                                  <p className="font-bold text-xs text-zinc-900 dark:text-zinc-55 truncate">{ord.productName}</p>
+                                  <p className="font-bold text-xs text-zinc-900 dark:text-zinc-50 truncate">{ord.productName}</p>
                                   <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 mt-0.5">
-                                    <span className="text-[10px] text-zinc-450 dark:text-zinc-500 uppercase font-semibold">Qty: {ord.quantity}</span>
+                                    <span className="text-[10px] text-zinc-400 dark:text-zinc-500 uppercase font-semibold">Qty: {ord.quantity}</span>
                                     {ord.size && (
-                                      <span className="text-[10px] text-violet-650 dark:text-violet-400 uppercase font-bold">Size: {ord.size}</span>
+                                      <span className="text-[10px] text-violet-600 dark:text-violet-400 uppercase font-bold">Size: {ord.size}</span>
                                     )}
                                     {ord.color && (
-                                      <span className="text-[10px] text-pink-650 dark:text-pink-400 uppercase font-bold">Color: {ord.color}</span>
+                                      <span className="text-[10px] text-pink-600 dark:text-pink-400 uppercase font-bold">Color: {ord.color}</span>
                                     )}
                                     {isAccepted && (
-                                      <span className="inline-flex bg-emerald-800/25 dark:bg-emerald-955/65 text-emerald-600 dark:text-emerald-450 text-[9px] font-extrabold px-1.5 py-0.2 rounded border border-emerald-500/20 uppercase tracking-wider">
+                                      <span className="inline-flex bg-emerald-800/25 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 text-[9px] font-extrabold px-1.5 py-0.5 rounded border border-emerald-500/20 uppercase tracking-wider">
                                         Accepted Order
                                       </span>
                                     )}
@@ -280,11 +280,11 @@ export default function AdminDashboardHome() {
 
                             {/* Customer */}
                             <td className="px-5 py-4">
-                              <span className="font-bold text-xs text-zinc-805 dark:text-zinc-200">{ord.userName}</span>
+                              <span className="font-bold text-xs text-zinc-800 dark:text-zinc-200">{ord.userName}</span>
                             </td>
 
                             {/* Date */}
-                            <td className="px-5 py-4 text-xs text-zinc-450 dark:text-zinc-500 font-medium">
+                            <td className="px-5 py-4 text-xs text-zinc-400 dark:text-zinc-500 font-medium">
                               {ord.date}
                             </td>
 
@@ -346,7 +346,7 @@ export default function AdminDashboardHome() {
                                 ) : (
                                   <button
                                     onClick={() => handleUpdateOrderStatus(ord.id, 'completed')}
-                                    className="px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-650 dark:bg-emerald-955/20 dark:hover:bg-emerald-900/35 dark:text-emerald-450 font-bold text-[10px] rounded-xl transition duration-150 cursor-pointer text-center"
+                                    className="px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-600 dark:bg-emerald-950/20 dark:hover:bg-emerald-900/30 dark:text-emerald-400 font-bold text-[10px] rounded-xl transition duration-150 cursor-pointer text-center"
                                   >
                                     Complete Order
                                   </button>
@@ -354,7 +354,7 @@ export default function AdminDashboardHome() {
 
                                 <button
                                   onClick={() => handleUpdateOrderStatus(ord.id, 'cancelled')}
-                                  className="px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-650 border border-zinc-200/20 dark:bg-rose-950/20 dark:hover:bg-rose-900/35 dark:text-rose-455 font-bold text-[10px] rounded-xl transition duration-150 cursor-pointer text-center"
+                                  className="px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-600 border border-zinc-200/20 dark:bg-rose-950/20 dark:hover:bg-rose-900/30 dark:text-rose-400 font-bold text-[10px] rounded-xl transition duration-150 cursor-pointer text-center"
                                 >
                                   Reject Order
                                 </button>
@@ -381,13 +381,13 @@ export default function AdminDashboardHome() {
                         transition={{ type: 'spring', duration: 0.4 }}
                         className={`border rounded-3xl p-5 space-y-4 hover:shadow-sm transition flex flex-col justify-between ${
                           isAccepted 
-                            ? 'bg-emerald-950/15 border-emerald-500/40 dark:bg-emerald-950/25' 
-                            : 'bg-zinc-50/45 dark:bg-zinc-950/15 border-zinc-200/35 dark:border-zinc-800/40'
+                            ? 'bg-emerald-950/10 border-emerald-500/40 dark:bg-emerald-950/20' 
+                            : 'bg-zinc-50/45 dark:bg-zinc-900 border-zinc-200/35 dark:border-zinc-800'
                         }`}
                       >
                         <div className="space-y-4">
                           <div className="flex gap-4">
-                            <div className="relative aspect-[3/4] w-14 sm:w-16 rounded-2xl overflow-hidden bg-zinc-150 dark:bg-zinc-900 shrink-0 border border-zinc-250/20 dark:border-zinc-800/40">
+                            <div className="relative aspect-[3/4] w-14 sm:w-16 rounded-2xl overflow-hidden bg-zinc-100 dark:bg-zinc-800 shrink-0 border border-zinc-200/20 dark:border-zinc-700">
                               <img 
                                 src={ord.productImage || `/featured${(idx % 4) + 1}.jpg`} 
                                 alt={ord.productName}
@@ -397,24 +397,24 @@ export default function AdminDashboardHome() {
                             <div className="flex-1 min-w-0 py-0.5 flex flex-col justify-between">
                               <div>
                                 {isAccepted ? (
-                                  <span className="text-[9px] font-extrabold text-emerald-600 dark:text-emerald-455 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-100 dark:border-emerald-900/40 px-2 py-0.5 rounded-md uppercase tracking-wider block w-fit">
+                                  <span className="text-[9px] font-extrabold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-100 dark:border-emerald-900/40 px-2 py-0.5 rounded-md uppercase tracking-wider block w-fit">
                                     Accepted Order
                                   </span>
                                 ) : (
-                                  <span className="text-[9px] font-extrabold text-amber-600 dark:text-amber-455 bg-amber-50 dark:bg-amber-950/20 border border-amber-100 dark:border-amber-900/40 px-2 py-0.5 rounded-md uppercase tracking-wider block w-fit">
+                                  <span className="text-[9px] font-extrabold text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/20 border border-amber-100 dark:border-amber-900/40 px-2 py-0.5 rounded-md uppercase tracking-wider block w-fit">
                                     Paid Pending
                                   </span>
                                 )}
                                 <p className="font-extrabold text-zinc-900 dark:text-zinc-100 text-sm mt-2.5 truncate">{ord.userName}</p>
-                                <p className="text-xs text-zinc-550 dark:text-zinc-400 mt-0.5 truncate font-semibold">{ord.productName}</p>
+                                <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5 truncate font-semibold">{ord.productName}</p>
                                 <div className="flex gap-2 mt-1">
                                   {ord.size && (
-                                    <span className="text-[9px] font-bold bg-violet-50 dark:bg-violet-955/20 text-violet-750 dark:text-violet-400 px-1.5 py-0.5 rounded border border-violet-100 dark:border-violet-900/60 uppercase">
+                                    <span className="text-[9px] font-bold bg-violet-50 dark:bg-violet-950/20 text-violet-700 dark:text-violet-400 px-1.5 py-0.5 rounded border border-violet-100 dark:border-violet-900/60 uppercase">
                                       Size: {ord.size}
                                     </span>
                                   )}
                                   {ord.color && (
-                                    <span className="text-[9px] font-bold bg-pink-50 dark:bg-pink-955/20 text-pink-750 dark:text-pink-400 px-1.5 py-0.5 rounded border border-pink-100 dark:border-pink-900/60 uppercase">
+                                    <span className="text-[9px] font-bold bg-pink-50 dark:bg-pink-950/20 text-pink-700 dark:text-pink-400 px-1.5 py-0.5 rounded border border-pink-100 dark:border-pink-900/60 uppercase">
                                       Color: {ord.color}
                                     </span>
                                   )}
@@ -423,20 +423,20 @@ export default function AdminDashboardHome() {
                             </div>
                           </div>
                           
-                          <div className="flex justify-between items-center text-xs font-semibold text-zinc-500 dark:text-zinc-400 pt-2.5 border-t border-zinc-100 dark:border-zinc-800/50">
+                          <div className="flex justify-between items-center text-xs font-semibold text-zinc-500 dark:text-zinc-400 pt-2.5 border-t border-zinc-100 dark:border-zinc-800">
                             <div>
                               <span>Quantity: {ord.quantity}</span>
-                              <span className="text-[10px] text-zinc-400 dark:text-zinc-550 block font-normal mt-0.5">{ord.date}</span>
+                              <span className="text-[10px] text-zinc-400 dark:text-zinc-500 block font-normal mt-0.5">{ord.date}</span>
                             </div>
                             <div className="text-right">
-                              <span className="text-[10px] text-zinc-450 dark:text-zinc-505 block">Total</span>
+                              <span className="text-[10px] text-zinc-400 dark:text-zinc-500 block">Total</span>
                               <span className="font-black text-sm text-zinc-900 dark:text-zinc-50">${ord.totalValue}</span>
                             </div>
                           </div>
                         </div>
                         
                         {/* Grid actions (3 choices) */}
-                        <div className="flex flex-col gap-2 mt-4 pt-1.5 border-t border-zinc-150/40 dark:border-zinc-800/25">
+                        <div className="flex flex-col gap-2 mt-4 pt-1.5 border-t border-zinc-100 dark:border-zinc-800">
                           {!isAccepted ? (
                             <div className="flex gap-2">
                               <motion.button 
@@ -454,7 +454,7 @@ export default function AdminDashboardHome() {
                                   ease: "easeInOut"
                                 }}
                                 onClick={() => handleUpdateOrderStatus(ord.id, 'accepted')}
-                                className="flex-1 bg-indigo-550 hover:bg-indigo-655 text-white font-bold text-[10px] py-2 rounded-xl transition duration-150 shadow-sm cursor-pointer text-center"
+                                className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-[10px] py-2 rounded-xl transition duration-150 shadow-sm cursor-pointer text-center"
                               >
                                 Accept Order
                               </motion.button>
@@ -467,7 +467,7 @@ export default function AdminDashboardHome() {
                             </div>
                           ) : (
                             <div className="flex gap-2">
-                              <span className="flex-1 border border-emerald-500/20 bg-emerald-800/10 text-emerald-655 dark:text-emerald-450 font-bold text-[10px] py-2 rounded-xl flex items-center justify-center gap-1 select-none">
+                              <span className="flex-1 border border-emerald-500/20 bg-emerald-800/10 text-emerald-600 dark:text-emerald-400 font-bold text-[10px] py-2 rounded-xl flex items-center justify-center gap-1 select-none">
                                 <CheckCircle2 size={12} className="fill-current" />
                                 <span>Accepted</span>
                               </span>
@@ -494,7 +494,7 @@ export default function AdminDashboardHome() {
                           )}
                           <button 
                             onClick={() => handleUpdateOrderStatus(ord.id, 'cancelled')}
-                            className="w-full bg-rose-50 hover:bg-rose-100 text-rose-600 dark:bg-rose-955/20 dark:hover:bg-rose-900/30 dark:text-rose-455 font-bold text-[10px] py-2 rounded-xl transition duration-150 cursor-pointer text-center"
+                            className="w-full bg-rose-50 hover:bg-rose-100 text-rose-600 dark:bg-rose-950/20 dark:hover:bg-rose-900/30 dark:text-rose-400 font-bold text-[10px] py-2 rounded-xl transition duration-150 cursor-pointer text-center"
                           >
                             Reject Order
                           </button>
@@ -508,11 +508,11 @@ export default function AdminDashboardHome() {
               <motion.div 
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="py-10 text-center text-zinc-505 flex flex-col items-center justify-center"
+                className="py-10 text-center text-zinc-500 dark:text-zinc-400 flex flex-col items-center justify-center"
               >
                 <CheckCircle2 className="w-10 h-10 text-emerald-500 mb-3 fill-emerald-500/10" />
-                <p className="text-sm font-bold text-zinc-850 dark:text-zinc-200">All Clear!</p>
-                <p className="text-xs text-zinc-450 mt-1 max-w-[240px]">All pending customer checkout orders have been served.</p>
+                <p className="text-sm font-bold text-zinc-800 dark:text-zinc-200">All Clear!</p>
+                <p className="text-xs text-zinc-400 dark:text-zinc-500 mt-1 max-w-[240px]">All pending customer checkout orders have been served.</p>
               </motion.div>
             )}
           </AnimatePresence>
@@ -523,11 +523,11 @@ export default function AdminDashboardHome() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
         
         {/* Section: Served Products */}
-        <div className="bg-white dark:bg-zinc-900/40 border border-zinc-200/50 dark:border-zinc-805/45 rounded-3xl overflow-hidden shadow-sm">
-          <div className="px-6 py-4.5 border-b border-zinc-100 dark:border-zinc-800/60 bg-zinc-50/50 dark:bg-zinc-900/20">
-            <h2 className="text-xs font-extrabold text-zinc-400 dark:text-zinc-505 uppercase tracking-widest">Served Products (Fulfilled)</h2>
+        <div className="bg-white dark:bg-zinc-900 border border-zinc-200/50 dark:border-zinc-800 rounded-3xl overflow-hidden shadow-sm">
+          <div className="px-6 py-4 border-b border-zinc-100 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/50">
+            <h2 className="text-xs font-extrabold text-zinc-400 dark:text-zinc-400 uppercase tracking-widest">Served Products (Fulfilled)</h2>
           </div>
-          <div className="divide-y divide-zinc-100 dark:divide-zinc-850">
+          <div className="divide-y divide-zinc-100 dark:divide-zinc-800">
             <AnimatePresence>
               {servedProducts.map((p, idx) => (
                 <motion.div 
@@ -535,10 +535,10 @@ export default function AdminDashboardHome() {
                   layout
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: 'auto' }}
-                  className="p-5 flex justify-between items-center hover:bg-zinc-50/30 dark:hover:bg-zinc-900/10 transition duration-150 overflow-hidden"
+                  className="p-5 flex justify-between items-center hover:bg-zinc-50/30 dark:hover:bg-zinc-800/20 transition duration-150 overflow-hidden"
                 >
                   <div className="flex items-center gap-3.5 min-w-0">
-                    <div className="relative aspect-[3/4] w-10 rounded-lg overflow-hidden bg-zinc-100 dark:bg-zinc-900 shrink-0 border border-zinc-200/30 dark:border-zinc-800/30">
+                    <div className="relative aspect-[3/4] w-10 rounded-lg overflow-hidden bg-zinc-100 dark:bg-zinc-800 shrink-0 border border-zinc-200/30 dark:border-zinc-700">
                       <img 
                         src={p.productImage || `/featured${(idx % 4) + 1}.jpg`} 
                         alt={p.productName}
@@ -549,14 +549,14 @@ export default function AdminDashboardHome() {
                       <p className="font-bold text-zinc-900 dark:text-zinc-100 text-sm truncate">{p.productName}</p>
                       <div className="flex flex-wrap items-center gap-1.5 text-[10px] text-zinc-400 dark:text-zinc-500 mt-0.5">
                         <span>Customer: {p.userName} &bull; {p.date}</span>
-                        {p.size && <span className="font-bold text-violet-650 dark:text-violet-400">({p.size})</span>}
-                        {p.color && <span className="font-bold text-pink-650 dark:text-pink-400">({p.color})</span>}
+                        {p.size && <span className="font-bold text-violet-600 dark:text-violet-400">({p.size})</span>}
+                        {p.color && <span className="font-bold text-pink-600 dark:text-pink-400">({p.color})</span>}
                       </div>
                     </div>
                   </div>
                   <div className="text-right shrink-0">
                     <span className="font-black text-sm text-zinc-900 dark:text-zinc-50 block">${p.totalValue}</span>
-                    <span className="inline-flex items-center gap-1 bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-100 dark:border-emerald-900/40 text-emerald-600 dark:text-emerald-450 text-[9px] font-extrabold px-1.5 py-0.5 rounded shadow-sm mt-1 uppercase">
+                    <span className="inline-flex items-center gap-1 bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-100 dark:border-emerald-900/40 text-emerald-600 dark:text-emerald-400 text-[9px] font-extrabold px-1.5 py-0.5 rounded shadow-sm mt-1 uppercase">
                       Completed
                     </span>
                   </div>
@@ -564,17 +564,17 @@ export default function AdminDashboardHome() {
               ))}
             </AnimatePresence>
             {servedProducts.length === 0 && (
-              <div className="p-8 text-center text-xs text-zinc-505 leading-relaxed font-semibold">No served products history.</div>
+              <div className="p-8 text-center text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed font-semibold">No served products history.</div>
             )}
           </div>
         </div>
 
         {/* Section: Rejected Products */}
-        <div className="bg-white dark:bg-zinc-900/40 border border-zinc-200/50 dark:border-zinc-805/45 rounded-3xl overflow-hidden shadow-sm">
-          <div className="px-6 py-4.5 border-b border-zinc-100 dark:border-zinc-800/60 bg-zinc-50/50 dark:bg-zinc-900/20">
-            <h2 className="text-xs font-extrabold text-zinc-400 dark:text-zinc-555 uppercase tracking-widest">Rejected / Flagged Orders</h2>
+        <div className="bg-white dark:bg-zinc-900 border border-zinc-200/50 dark:border-zinc-800 rounded-3xl overflow-hidden shadow-sm">
+          <div className="px-6 py-4 border-b border-zinc-100 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/50">
+            <h2 className="text-xs font-extrabold text-zinc-400 dark:text-zinc-400 uppercase tracking-widest">Rejected / Flagged Orders</h2>
           </div>
-          <div className="divide-y divide-zinc-100 dark:divide-zinc-850">
+          <div className="divide-y divide-zinc-100 dark:divide-zinc-800">
             <AnimatePresence>
               {rejectedProducts.map((p, idx) => (
                 <motion.div 
@@ -582,10 +582,10 @@ export default function AdminDashboardHome() {
                   layout
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: 'auto' }}
-                  className="p-5 flex justify-between items-center hover:bg-zinc-50/30 dark:hover:bg-zinc-900/10 transition duration-150 overflow-hidden"
+                  className="p-5 flex justify-between items-center hover:bg-zinc-50/30 dark:hover:bg-zinc-800/20 transition duration-150 overflow-hidden"
                 >
                   <div className="flex items-center gap-3.5 min-w-0">
-                    <div className="relative aspect-[3/4] w-10 rounded-lg overflow-hidden bg-zinc-100 dark:bg-zinc-900 shrink-0 border border-zinc-200/30 dark:border-zinc-800/30">
+                    <div className="relative aspect-[3/4] w-10 rounded-lg overflow-hidden bg-zinc-100 dark:bg-zinc-800 shrink-0 border border-zinc-200/30 dark:border-zinc-700">
                       <img 
                         src={p.productImage || `/featured${(idx % 4) + 1}.jpg`} 
                         alt={p.productName}
@@ -596,14 +596,14 @@ export default function AdminDashboardHome() {
                       <p className="font-bold text-zinc-900 dark:text-zinc-100 text-sm truncate">{p.productName}</p>
                       <div className="flex flex-wrap items-center gap-1.5 text-[10px] text-zinc-400 dark:text-zinc-500 mt-0.5">
                         <span>Customer: {p.userName} &bull; {p.date}</span>
-                        {p.size && <span className="font-bold text-violet-650 dark:text-violet-400">({p.size})</span>}
-                        {p.color && <span className="font-bold text-pink-650 dark:text-pink-400">({p.color})</span>}
+                        {p.size && <span className="font-bold text-violet-600 dark:text-violet-400">({p.size})</span>}
+                        {p.color && <span className="font-bold text-pink-600 dark:text-pink-400">({p.color})</span>}
                       </div>
                     </div>
                   </div>
                   <div className="text-right shrink-0">
                     <span className="font-black text-sm text-zinc-900 dark:text-zinc-50 block">${p.totalValue}</span>
-                    <span className="inline-flex items-center gap-1 bg-rose-50 dark:bg-rose-950/20 border border-rose-100 dark:border-rose-900/40 text-rose-600 dark:text-rose-455 text-[9px] font-extrabold px-1.5 py-0.5 rounded shadow-sm mt-1 uppercase">
+                    <span className="inline-flex items-center gap-1 bg-rose-50 dark:bg-rose-950/20 border border-rose-100 dark:border-rose-900/40 text-rose-600 dark:text-rose-400 text-[9px] font-extrabold px-1.5 py-0.5 rounded shadow-sm mt-1 uppercase">
                       Rejected
                     </span>
                   </div>
@@ -611,35 +611,35 @@ export default function AdminDashboardHome() {
               ))}
             </AnimatePresence>
             {rejectedProducts.length === 0 && (
-              <div className="p-8 text-center text-xs text-zinc-550 leading-relaxed font-semibold">No rejected products history.</div>
+              <div className="p-8 text-center text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed font-semibold">No rejected products history.</div>
             )}
           </div>
         </div>
       </div>
 
       {/* Sales Revenue Trend (Stretched full-width at the bottom of the page) */}
-      <div className="bg-white dark:bg-zinc-900/40 border border-zinc-200/50 dark:border-zinc-800/40 rounded-3xl p-6 shadow-sm flex flex-col justify-between">
+      <div className="bg-white dark:bg-zinc-900 border border-zinc-200/50 dark:border-zinc-800 rounded-3xl p-6 shadow-sm flex flex-col justify-between">
         <div>
-          <h3 className="font-extrabold text-sm text-zinc-850 dark:text-zinc-205 tracking-tight">Sales Revenue Trend</h3>
+          <h3 className="font-extrabold text-sm text-zinc-800 dark:text-zinc-100 tracking-tight">Sales Revenue Trend</h3>
           <p className="text-[11px] text-zinc-500 dark:text-zinc-400">Mocked gross sales metrics over the last 5 weeks.</p>
         </div>
         
-        <div className="h-48 flex items-end justify-between gap-6 pt-8 pb-4 px-2 border-b border-zinc-100 dark:border-zinc-800/80">
+        <div className="h-48 flex items-end justify-between gap-6 pt-8 pb-4 px-2 border-b border-zinc-100 dark:border-zinc-800">
           {[
             { label: 'Week 23', value: 850, pct: 'h-[35%]', color: 'from-violet-500/80 to-indigo-500/80' },
             { label: 'Week 24', value: 1200, pct: 'h-[50%]', color: 'from-violet-500/80 to-indigo-500/80' },
             { label: 'Week 25', value: 1650, pct: 'h-[68%]', color: 'from-violet-500/80 to-indigo-500/80' },
             { label: 'Week 26', value: 1400, pct: 'h-[58%]', color: 'from-violet-500/80 to-indigo-500/80' },
-            { label: 'Week 27', value: 2420, pct: 'h-[100%]', color: 'from-violet-650 to-indigo-650 dark:from-violet-500 dark:to-indigo-550' }
+            { label: 'Week 27', value: 2420, pct: 'h-[100%]', color: 'from-violet-600 to-indigo-600 dark:from-violet-500 dark:to-indigo-500' }
           ].map((bar, i) => (
             <div key={i} className="flex-1 flex flex-col items-center gap-2 group h-full justify-end">
-              <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-zinc-955 dark:bg-zinc-50 text-white dark:text-zinc-950 text-[10px] font-extrabold py-1 px-2.5 rounded-lg -translate-y-1 shadow-md">
+              <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-zinc-900 dark:bg-zinc-50 text-white dark:text-zinc-950 text-[10px] font-extrabold py-1 px-2.5 rounded-lg -translate-y-1 shadow-md">
                 ${bar.value}
               </div>
               <div className="w-full flex items-end justify-end h-full min-h-[4px]">
-                <div className={`w-full ${bar.pct} bg-gradient-to-t ${bar.color} rounded-t-xl group-hover:opacity-90 transition-all duration-305 shadow-sm`} />
+                <div className={`w-full ${bar.pct} bg-gradient-to-t ${bar.color} rounded-t-xl group-hover:opacity-90 transition-all duration-300 shadow-sm`} />
               </div>
-              <span className="text-[10px] font-bold text-zinc-400 dark:text-zinc-555 mt-1">{bar.label}</span>
+              <span className="text-[10px] font-bold text-zinc-400 dark:text-zinc-500 mt-1">{bar.label}</span>
             </div>
           ))}
         </div>

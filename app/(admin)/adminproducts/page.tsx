@@ -334,12 +334,12 @@ export default function AdminProductsPage() {
                 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-1.5">
-                    <label className="text-[10px] font-bold text-zinc-450 dark:text-zinc-500 uppercase tracking-wider block" htmlFor="prod-name">Product Name</label>
+                    <label className="text-[10px] font-bold text-zinc-400 dark:text-zinc-400 uppercase tracking-wider block" htmlFor="prod-name">Product Name</label>
                     <input
                       id="prod-name"
                       type="text"
                       required
-                      className="w-full bg-slate-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-2xl px-3.5 py-3 text-xs text-zinc-900 dark:text-zinc-55 placeholder-zinc-400 outline-none focus:ring-2 focus:ring-violet-500/25 focus:border-violet-500 transition duration-150"
+                      className="w-full bg-slate-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-2xl px-3.5 py-3 text-xs text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600 outline-none focus:ring-2 focus:ring-violet-500/25 focus:border-violet-500 dark:focus:border-violet-400 transition duration-150"
                       placeholder="e.g. Linen Wrap Jacket"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
@@ -347,13 +347,13 @@ export default function AdminProductsPage() {
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-[10px] font-bold text-zinc-450 dark:text-zinc-500 uppercase tracking-wider block" htmlFor="prod-price">Price ($)</label>
+                    <label className="text-[10px] font-bold text-zinc-400 dark:text-zinc-400 uppercase tracking-wider block" htmlFor="prod-price">Price ($)</label>
                     <input
                       id="prod-price"
                       type="number"
                       required
                       min="1"
-                      className="w-full bg-slate-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-2xl px-3.5 py-3 text-xs text-zinc-900 dark:text-zinc-55 placeholder-zinc-400 outline-none focus:ring-2 focus:ring-violet-500/25 focus:border-violet-500 transition duration-150"
+                      className="w-full bg-slate-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-2xl px-3.5 py-3 text-xs text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600 outline-none focus:ring-2 focus:ring-violet-500/25 focus:border-violet-500 dark:focus:border-violet-400 transition duration-150"
                       placeholder="e.g. 120"
                       value={price}
                       onChange={(e) => setPrice(e.target.value)}
@@ -361,37 +361,37 @@ export default function AdminProductsPage() {
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-[10px] font-bold text-zinc-450 dark:text-zinc-500 uppercase tracking-wider block" htmlFor="prod-category">Category Archive</label>
+                    <label className="text-[10px] font-bold text-zinc-400 dark:text-zinc-400 uppercase tracking-wider block" htmlFor="prod-category">Category Archive</label>
                     <select
                       id="prod-category"
-                      className="w-full bg-slate-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-2xl px-3.5 py-3 text-xs text-zinc-900 dark:text-zinc-55 outline-none focus:ring-2 focus:ring-violet-500/25 focus:border-violet-500 transition duration-150 cursor-pointer"
+                      className="w-full bg-slate-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-2xl px-3.5 py-3 text-xs text-zinc-900 dark:text-zinc-100 outline-none focus:ring-2 focus:ring-violet-500/25 focus:border-violet-500 dark:focus:border-violet-400 transition duration-150 cursor-pointer"
                       value={category}
                       onChange={(e) => setCategory(e.target.value)}
                     >
-                      <option value="active-wear">Active Wear</option>
-                      <option value="travel-set">Travel Set</option>
-                      <option value="lounge-wear">Lounge Wear</option>
-                      <option value="footwear">Foot Wear</option>
+                      <option value="active-wear" className="bg-white dark:bg-zinc-900 text-zinc-800 dark:text-zinc-100">Active Wear</option>
+                      <option value="travel-set" className="bg-white dark:bg-zinc-900 text-zinc-800 dark:text-zinc-100">Travel Set</option>
+                      <option value="lounge-wear" className="bg-white dark:bg-zinc-900 text-zinc-800 dark:text-zinc-100">Lounge Wear</option>
+                      <option value="footwear" className="bg-white dark:bg-zinc-900 text-zinc-800 dark:text-zinc-100">Foot Wear</option>
                     </select>
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-[10px] font-bold text-zinc-450 dark:text-zinc-500 uppercase tracking-wider block" htmlFor="prod-status">Inventory Status</label>
+                    <label className="text-[10px] font-bold text-zinc-400 dark:text-zinc-400 uppercase tracking-wider block" htmlFor="prod-status">Inventory Status</label>
                     <select
                       id="prod-status"
-                      className="w-full bg-slate-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-2xl px-3.5 py-3 text-xs text-zinc-900 dark:text-zinc-55 outline-none focus:ring-2 focus:ring-violet-500/25 focus:border-violet-500 transition duration-150 cursor-pointer"
+                      className="w-full bg-slate-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-2xl px-3.5 py-3 text-xs text-zinc-900 dark:text-zinc-100 outline-none focus:ring-2 focus:ring-violet-500/25 focus:border-violet-500 dark:focus:border-violet-400 transition duration-150 cursor-pointer"
                       value={status}
                       onChange={(e) => setStatus(e.target.value as any)}
                     >
-                      <option value="In Stock">In Stock</option>
-                      <option value="Few Left">Few Left</option>
-                      <option value="Out Of Stock">Out Of Stock</option>
+                      <option value="In Stock" className="bg-white dark:bg-zinc-900 text-zinc-800 dark:text-zinc-100">In Stock</option>
+                      <option value="Few Left" className="bg-white dark:bg-zinc-900 text-zinc-800 dark:text-zinc-100">Few Left</option>
+                      <option value="Out Of Stock" className="bg-white dark:bg-zinc-900 text-zinc-800 dark:text-zinc-100">Out Of Stock</option>
                     </select>
                   </div>
 
                   <div className="space-y-1.5 sm:col-span-2">
-                    <label className="text-[10px] font-bold text-zinc-450 dark:text-zinc-500 uppercase tracking-wider block mb-1.5" htmlFor="prod-image">Product Image File</label>
-                    <div className="relative border-2 border-dashed border-zinc-200 dark:border-zinc-800 hover:border-violet-500 dark:hover:border-violet-400 rounded-2xl p-5 transition duration-155 flex flex-col items-center justify-center gap-1.5 bg-slate-50 dark:bg-zinc-950 cursor-pointer">
+                    <label className="text-[10px] font-bold text-zinc-400 dark:text-zinc-400 uppercase tracking-wider block mb-1.5" htmlFor="prod-image">Product Image File</label>
+                    <div className="relative border-2 border-dashed border-zinc-200 dark:border-zinc-700 hover:border-violet-500 dark:hover:border-violet-400 rounded-2xl p-5 transition duration-150 flex flex-col items-center justify-center gap-1.5 bg-slate-50 dark:bg-zinc-950 cursor-pointer">
                       <input
                         id="prod-image"
                         type="file"
@@ -403,8 +403,8 @@ export default function AdminProductsPage() {
                         }}
                         className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                       />
-                      <ShoppingBag className="w-6 h-6 text-zinc-400 dark:text-zinc-650" />
-                      <span className="text-xs text-zinc-650 dark:text-zinc-350 font-bold max-w-[280px] truncate text-center">
+                      <ShoppingBag className="w-6 h-6 text-zinc-400 dark:text-zinc-600" />
+                      <span className="text-xs text-zinc-600 dark:text-zinc-300 font-bold max-w-[280px] truncate text-center">
                         {imageFile ? imageFile.name : 'Select or drag product image'}
                       </span>
                       <span className="text-[9px] text-zinc-400 dark:text-zinc-500 tracking-wider uppercase font-semibold">PNG, JPG, WEBP formats</span>
@@ -413,11 +413,11 @@ export default function AdminProductsPage() {
 
                   {/* Colors Input */}
                   <div className="space-y-1.5 sm:col-span-2">
-                    <label className="text-[10px] font-bold text-zinc-450 dark:text-zinc-500 uppercase tracking-wider block">Available Colors</label>
+                    <label className="text-[10px] font-bold text-zinc-400 dark:text-zinc-400 uppercase tracking-wider block">Available Colors</label>
                     <div className="flex gap-2 mb-2">
                       <input
                         type="text"
-                        className="flex-1 bg-slate-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2 text-xs text-zinc-900 dark:text-zinc-55 outline-none focus:ring-2 focus:ring-violet-500/25"
+                        className="flex-1 bg-slate-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2 text-xs text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600 outline-none focus:ring-2 focus:ring-violet-500/25"
                         placeholder="Type color e.g. Black"
                         value={colorInput}
                         onChange={(e) => setColorInput(e.target.value)}
@@ -439,23 +439,23 @@ export default function AdminProductsPage() {
                             setColorInput('');
                           }
                         }}
-                        className="bg-zinc-900 hover:bg-zinc-805 dark:bg-zinc-50 dark:hover:bg-zinc-150 text-white dark:text-zinc-900 px-4 rounded-xl text-xs font-bold transition cursor-pointer"
+                        className="bg-zinc-900 hover:bg-zinc-800 dark:bg-zinc-50 dark:hover:bg-zinc-200 text-white dark:text-zinc-900 px-4 rounded-xl text-xs font-bold transition cursor-pointer"
                       >
                         Add
                       </button>
                     </div>
                     {colors.length > 0 && (
-                      <div className="flex flex-wrap gap-1.5 p-2 bg-slate-50 dark:bg-zinc-950/65 rounded-xl border border-zinc-150 dark:border-zinc-800/40">
+                      <div className="flex flex-wrap gap-1.5 p-2 bg-slate-50 dark:bg-zinc-950 rounded-xl border border-zinc-150 dark:border-zinc-800">
                         {colors.map((c) => (
                           <span
                             key={c}
-                            className="inline-flex items-center gap-1 bg-pink-50 dark:bg-pink-955/25 text-pink-700 dark:text-pink-400 border border-pink-100 dark:border-pink-900/60 px-2 py-0.5 rounded-lg text-[10px] font-bold"
+                            className="inline-flex items-center gap-1 bg-pink-50 dark:bg-pink-950/25 text-pink-700 dark:text-pink-400 border border-pink-100 dark:border-pink-900/60 px-2 py-0.5 rounded-lg text-[10px] font-bold"
                           >
                             <span>{c}</span>
                             <button
                               type="button"
                               onClick={() => setColors(colors.filter((x) => x !== c))}
-                              className="text-pink-650 hover:text-pink-850 dark:text-pink-400 font-bold transition-colors cursor-pointer"
+                              className="text-pink-600 hover:text-pink-800 dark:text-pink-400 font-bold transition-colors cursor-pointer"
                             >
                               <X size={10} className="stroke-[2.5]" />
                             </button>
@@ -467,11 +467,11 @@ export default function AdminProductsPage() {
 
                   {/* Sizes Input */}
                   <div className="space-y-1.5 sm:col-span-2">
-                    <label className="text-[10px] font-bold text-zinc-450 dark:text-zinc-500 uppercase tracking-wider block">Available Sizes</label>
+                    <label className="text-[10px] font-bold text-zinc-400 dark:text-zinc-400 uppercase tracking-wider block">Available Sizes</label>
                     <div className="flex gap-2 mb-2">
                       <input
                         type="text"
-                        className="flex-1 bg-slate-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2 text-xs text-zinc-900 dark:text-zinc-55 outline-none focus:ring-2 focus:ring-violet-500/25"
+                        className="flex-1 bg-slate-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2 text-xs text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600 outline-none focus:ring-2 focus:ring-violet-500/25"
                         placeholder="Type size e.g. M, L, 42"
                         value={sizeInput}
                         onChange={(e) => setSizeInput(e.target.value)}
@@ -493,23 +493,23 @@ export default function AdminProductsPage() {
                             setSizeInput('');
                           }
                         }}
-                        className="bg-zinc-900 hover:bg-zinc-805 dark:bg-zinc-50 dark:hover:bg-zinc-150 text-white dark:text-zinc-900 px-4 rounded-xl text-xs font-bold transition cursor-pointer"
+                        className="bg-zinc-900 hover:bg-zinc-800 dark:bg-zinc-50 dark:hover:bg-zinc-200 text-white dark:text-zinc-900 px-4 rounded-xl text-xs font-bold transition cursor-pointer"
                       >
                         Add
                       </button>
                     </div>
                     {sizes.length > 0 && (
-                      <div className="flex flex-wrap gap-1.5 p-2 bg-slate-50 dark:bg-zinc-950/65 rounded-xl border border-zinc-150 dark:border-zinc-800/40">
+                      <div className="flex flex-wrap gap-1.5 p-2 bg-slate-50 dark:bg-zinc-950 rounded-xl border border-zinc-150 dark:border-zinc-800">
                         {sizes.map((s) => (
                           <span
                             key={s}
-                            className="inline-flex items-center gap-1 bg-violet-50 dark:bg-violet-955/25 text-violet-700 dark:text-violet-400 border border-violet-100 dark:border-violet-900/60 px-2 py-0.5 rounded-lg text-[10px] font-bold"
+                            className="inline-flex items-center gap-1 bg-violet-50 dark:bg-violet-950/25 text-violet-700 dark:text-violet-400 border border-violet-100 dark:border-violet-900/60 px-2 py-0.5 rounded-lg text-[10px] font-bold"
                           >
                             <span>{s}</span>
                             <button
                               type="button"
                               onClick={() => setSizes(sizes.filter((x) => x !== s))}
-                              className="text-violet-650 hover:text-violet-850 dark:text-violet-400 font-bold transition-colors cursor-pointer"
+                              className="text-violet-600 hover:text-violet-800 dark:text-violet-400 font-bold transition-colors cursor-pointer"
                             >
                               <X size={10} className="stroke-[2.5]" />
                             </button>
@@ -522,7 +522,7 @@ export default function AdminProductsPage() {
 
                 {/* Checkboxes settings */}
                 <div className="border-t border-zinc-100 dark:border-zinc-800 pt-4 space-y-4">
-                  <span className="text-[10px] font-bold text-zinc-450 dark:text-zinc-500 uppercase tracking-wider block">Product Settings & Badges</span>
+                  <span className="text-[10px] font-bold text-zinc-400 dark:text-zinc-400 uppercase tracking-wider block">Product Settings & Badges</span>
                   
                   <div className="grid grid-cols-3 gap-3">
                     <button
@@ -530,8 +530,8 @@ export default function AdminProductsPage() {
                       onClick={() => setIsTopSelling(!isTopSelling)}
                       className={`flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-2xl text-xs font-bold transition cursor-pointer border ${
                         isTopSelling 
-                          ? 'bg-amber-50 dark:bg-amber-955/20 border-amber-300 dark:border-amber-900/60 text-amber-700 dark:text-amber-400' 
-                          : 'bg-slate-50 dark:bg-zinc-955/20 border-zinc-200 dark:border-zinc-800 text-zinc-500 dark:text-zinc-455'
+                          ? 'bg-amber-50 dark:bg-amber-950/20 border-amber-300 dark:border-amber-900/60 text-amber-700 dark:text-amber-400' 
+                          : 'bg-slate-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 text-zinc-500 dark:text-zinc-400'
                       }`}
                     >
                       <span className="text-[10px]">Top Selling</span>
@@ -542,8 +542,8 @@ export default function AdminProductsPage() {
                       onClick={() => setIsFeatured(!isFeatured)}
                       className={`flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-2xl text-xs font-bold transition cursor-pointer border ${
                         isFeatured 
-                          ? 'bg-violet-50 dark:bg-violet-955/20 border-violet-300 dark:border-violet-900/60 text-violet-700 dark:text-violet-400' 
-                          : 'bg-slate-50 dark:bg-zinc-955/20 border-zinc-200 dark:border-zinc-800 text-zinc-500 dark:text-zinc-455'
+                          ? 'bg-violet-50 dark:bg-violet-950/20 border-violet-300 dark:border-violet-900/60 text-violet-700 dark:text-violet-400' 
+                          : 'bg-slate-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 text-zinc-500 dark:text-zinc-400'
                       }`}
                     >
                       <span className="text-[10px]">Featured</span>
@@ -554,22 +554,22 @@ export default function AdminProductsPage() {
                       onClick={() => setIsSponsored(!isSponsored)}
                       className={`flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-2xl text-xs font-bold transition cursor-pointer border ${
                         isSponsored 
-                          ? 'bg-blue-50 dark:bg-blue-955/20 border-blue-300 dark:border-blue-900/60 text-blue-700 dark:text-blue-400' 
-                          : 'bg-slate-50 dark:bg-zinc-955/20 border-zinc-200 dark:border-zinc-800 text-zinc-500 dark:text-zinc-455'
+                          ? 'bg-blue-50 dark:bg-blue-950/20 border-blue-300 dark:border-blue-900/60 text-blue-700 dark:text-blue-400' 
+                          : 'bg-slate-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 text-zinc-500 dark:text-zinc-400'
                       }`}
                     >
                       <span className="text-[10px]">Sponsored</span>
                     </button>
                   </div>
 
-                  <div className="space-y-3.5 border-t border-zinc-100 dark:border-zinc-800/60 pt-4">
+                  <div className="space-y-3.5 border-t border-zinc-100 dark:border-zinc-800 pt-4">
                     <button
                       type="button"
                       onClick={() => setIsFlashSale(!isFlashSale)}
                       className={`w-full flex items-center justify-center gap-2 px-4 py-3 rounded-2xl text-xs font-bold transition cursor-pointer border ${
                         isFlashSale 
-                          ? 'bg-rose-50 dark:bg-rose-955/20 border-rose-300 dark:border-rose-900/60 text-rose-700 dark:text-rose-450' 
-                          : 'bg-slate-50 dark:bg-zinc-955/20 border-zinc-200 dark:border-zinc-800 text-zinc-500 dark:text-zinc-455'
+                          ? 'bg-rose-50 dark:bg-rose-950/20 border-rose-300 dark:border-rose-900/60 text-rose-700 dark:text-rose-400' 
+                          : 'bg-slate-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 text-zinc-500 dark:text-zinc-400'
                       }`}
                     >
                       <span>Flash Sale Offer</span>
@@ -585,26 +585,26 @@ export default function AdminProductsPage() {
                           className="grid grid-cols-2 gap-3 mt-2 overflow-hidden"
                         >
                           <div className="space-y-1.5 pb-2">
-                            <label className="text-[9px] font-bold text-zinc-400 uppercase tracking-wider block" htmlFor="old-price">Old Price ($)</label>
+                            <label className="text-[9px] font-bold text-zinc-400 dark:text-zinc-400 uppercase tracking-wider block" htmlFor="old-price">Old Price ($)</label>
                             <input
                               id="old-price"
                               type="number"
                               required={isFlashSale}
                               min="1"
-                              className="w-full bg-slate-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-2xl px-3 py-2.5 text-xs text-zinc-900 dark:text-zinc-55 outline-none focus:ring-1 focus:ring-rose-550"
+                              className="w-full bg-slate-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-2xl px-3 py-2.5 text-xs text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600 outline-none focus:ring-1 focus:ring-rose-500"
                               placeholder="e.g. 340"
                               value={oldPrice}
                               onChange={(e) => setOldPrice(e.target.value)}
                             />
                           </div>
                           <div className="space-y-1.5 pb-2">
-                            <label className="text-[9px] font-bold text-zinc-400 uppercase tracking-wider block" htmlFor="new-price">New Price ($)</label>
+                            <label className="text-[9px] font-bold text-zinc-400 dark:text-zinc-400 uppercase tracking-wider block" htmlFor="new-price">New Price ($)</label>
                             <input
                               id="new-price"
                               type="number"
                               required={isFlashSale}
                               min="1"
-                              className="w-full bg-slate-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-2xl px-3 py-2.5 text-xs text-zinc-900 dark:text-zinc-55 outline-none focus:ring-1 focus:ring-rose-550"
+                              className="w-full bg-slate-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-2xl px-3 py-2.5 text-xs text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600 outline-none focus:ring-1 focus:ring-rose-500"
                               placeholder="e.g. 240"
                               value={newPrice}
                               onChange={(e) => setNewPrice(e.target.value)}
@@ -617,18 +617,18 @@ export default function AdminProductsPage() {
                 </div>
 
               {/* Modal Actions */}
-              <div className="flex gap-3 border-t border-zinc-150 dark:border-zinc-800/80 pt-4 mt-6">
+              <div className="flex gap-3 border-t border-zinc-100 dark:border-zinc-800 pt-4 mt-6">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="flex-1 bg-white hover:bg-zinc-50 text-zinc-700 border border-zinc-200 dark:bg-zinc-950 dark:hover:bg-zinc-900 dark:border-zinc-850 dark:text-zinc-300 font-bold text-xs py-3 rounded-xl transition cursor-pointer text-center"
+                  className="flex-1 bg-white hover:bg-zinc-50 text-zinc-700 border border-zinc-200 dark:bg-zinc-950 dark:hover:bg-zinc-900 dark:border-zinc-800 dark:text-zinc-300 font-bold text-xs py-3 rounded-xl transition cursor-pointer text-center"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={uploadingImage}
-                  className="flex-1 bg-zinc-900 hover:bg-zinc-850 dark:bg-zinc-50 dark:hover:bg-zinc-150 text-white dark:text-zinc-900 font-bold text-xs py-3 rounded-xl transition cursor-pointer text-center disabled:opacity-50"
+                  className="flex-1 bg-zinc-900 hover:bg-zinc-800 dark:bg-zinc-50 dark:hover:bg-zinc-200 text-white dark:text-zinc-900 font-bold text-xs py-3 rounded-xl transition cursor-pointer text-center disabled:opacity-50"
                 >
                   {uploadingImage ? 'Uploading Image...' : isEditing ? 'Save Changes' : 'Add Product'}
                 </button>
@@ -694,7 +694,7 @@ export default function AdminProductsPage() {
                           )}
                         </div>
                         <div>
-                          <p className="font-bold text-zinc-900 dark:text-zinc-55">{prod.name}</p>
+                          <p className="font-bold text-zinc-900 dark:text-zinc-50">{prod.name}</p>
                           <div className="flex flex-wrap gap-1.5 mt-1">
                           {prod.featured && (
                             <span className="text-[8px] font-extrabold uppercase tracking-wider text-violet-600 dark:text-violet-400 bg-violet-50 dark:bg-violet-955/20 border border-violet-100 dark:border-violet-900/60 px-1.5 py-0.5 rounded-md shadow-xs">
@@ -747,7 +747,7 @@ export default function AdminProductsPage() {
                         <span className="text-xs font-bold text-zinc-700 dark:text-zinc-350">{prod.rating}</span>
                       </div>
                     </td>
-                    <td className="px-6 py-4 font-extrabold text-zinc-900 dark:text-zinc-55 font-mono">
+                    <td className="px-6 py-4 font-extrabold text-zinc-900 dark:text-zinc-50 font-mono">
                       ${prod.price}
                     </td>
                     <td className="px-6 py-4">
@@ -756,10 +756,10 @@ export default function AdminProductsPage() {
                         onChange={(e) => handleUpdateProductStatus(prod.id, e.target.value as any)}
                         className={`px-2.5 py-1 rounded-xl text-[11px] font-bold border cursor-pointer outline-none transition duration-150 uppercase tracking-wider ${
                           prod.status === 'In Stock'
-                            ? 'bg-emerald-50 dark:bg-emerald-955/20 border-emerald-250 dark:border-emerald-900/60 text-emerald-600 dark:text-emerald-400 font-extrabold'
+                            ? 'bg-emerald-50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-900/60 text-emerald-600 dark:text-emerald-400 font-extrabold'
                             : prod.status === 'Few Left'
-                            ? 'bg-amber-50 dark:bg-amber-955/25 border-amber-250 dark:border-amber-900/60 text-amber-650 dark:text-amber-400 font-extrabold'
-                            : 'bg-rose-50 dark:bg-rose-955/25 border-rose-250 dark:border-rose-900/60 text-rose-600 dark:text-rose-450 font-extrabold'
+                            ? 'bg-amber-50 dark:bg-amber-950/25 border-amber-200 dark:border-amber-900/60 text-amber-600 dark:text-amber-400 font-extrabold'
+                            : 'bg-rose-50 dark:bg-rose-950/25 border-rose-200 dark:border-rose-900/60 text-rose-600 dark:text-rose-400 font-extrabold'
                         }`}
                       >
                         <option value="In Stock" className="bg-white dark:bg-zinc-900 text-zinc-800 dark:text-zinc-200">In Stock</option>
