@@ -142,7 +142,7 @@ export default function Sponsored({ products = [] }: SponsoredProps) {
               {/* Pricing Row */}
               <div className="px-1 mt-4 pt-3.5 border-t border-zinc-200/40 dark:border-zinc-800/50">
                 <div className="flex items-center justify-between">
-                  <span className="font-extrabold text-base md:text-lg text-zinc-900 dark:text-zinc-50">GH₵{item.price}</span>
+                  <span className="font-extrabold text-base md:text-lg text-zinc-900 dark:text-zinc-50">GHS {item.price}</span>
                   <span className="text-xs font-semibold text-zinc-400">Partner Label</span>
                 </div>
               </div>

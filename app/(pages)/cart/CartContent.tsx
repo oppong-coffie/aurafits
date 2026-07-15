@@ -364,7 +364,7 @@ export default function CartContent({ initialItems = [] }: CartContentProps) {
                           
                           {/* Price */}
                           <span className="font-extrabold text-base md:text-lg text-zinc-900 dark:text-zinc-50 shrink-0">
-                            GH₵{p.price * item.quantity}
+                            GHS {p.price * item.quantity}
                           </span>
                         </div>
                       </div>
@@ -424,28 +424,28 @@ export default function CartContent({ initialItems = [] }: CartContentProps) {
                 <div className="space-y-3.5 text-sm font-semibold">
                   <div className="flex justify-between text-zinc-550 dark:text-zinc-400">
                     <span>Subtotal</span>
-                    <span className="text-zinc-900 dark:text-zinc-50">GH₵{subtotal}</span>
+                    <span className="text-zinc-900 dark:text-zinc-50">GHS {subtotal}</span>
                   </div>
                   <div className="flex justify-between text-zinc-550 dark:text-zinc-400">
                     <span>Shipping</span>
                     <span className="text-zinc-900 dark:text-zinc-50">
-                      {shipping === 0 ? <span className="text-emerald-600 dark:text-emerald-450 font-bold uppercase text-xs">Free</span> : `GH₵${shipping}`}
+                      {shipping === 0 ? <span className="text-emerald-600 dark:text-emerald-450 font-bold uppercase text-xs">Free</span> : `GHS ${shipping}`}
                     </span>
                   </div>
                   <div className="flex justify-between text-zinc-550 dark:text-zinc-400">
                     <span>Estimated Tax (8%)</span>
-                    <span className="text-zinc-900 dark:text-zinc-50">GH₵{tax}</span>
+                    <span className="text-zinc-900 dark:text-zinc-50">GHS {tax}</span>
                   </div>
                   
                   {shipping > 0 && (
                     <p className="text-[10px] text-zinc-400 mt-1 bg-zinc-50 dark:bg-zinc-900/60 p-2 rounded-xl border border-zinc-200/20 dark:border-zinc-800/30">
-                      💡 Tip: Add GH₵{(200 - subtotal)} more to qualify for Free Shipping!
+                      💡 Tip: Add GHS {(200 - subtotal)} more to qualify for Free Shipping!
                     </p>
                   )}
                   
                   <div className="flex justify-between text-base font-extrabold text-zinc-900 dark:text-zinc-50 pt-4 border-t border-zinc-150 dark:border-zinc-800">
                     <span>Total</span>
-                    <span>GH₵{total}</span>
+                    <span>GHS {total}</span>
                   </div>
                 </div>
 
@@ -534,8 +534,8 @@ export default function CartContent({ initialItems = [] }: CartContentProps) {
                   <h4 className="font-bold text-sm text-zinc-900 dark:text-zinc-50 truncate">
                     {itemToRemove.productId.name}
                   </h4>
-                  <p className="text-[11px] text-zinc-500 mt-0.5">
-                    Price: ${itemToRemove.productId.price} &bull; Qty: {itemToRemove.quantity}
+                  <p className="text-[11px] text-zinc-550 mt-0.5">
+                    Price: GHS {itemToRemove.productId.price} &bull; Qty: {itemToRemove.quantity}
                   </p>
                 </div>
               </div>

@@ -347,7 +347,7 @@ export default function AdminProductsPage() {
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-[10px] font-bold text-zinc-400 dark:text-zinc-400 uppercase tracking-wider block" htmlFor="prod-price">Price (GH₵)</label>
+                    <label className="text-[10px] font-bold text-zinc-400 dark:text-zinc-400 uppercase tracking-wider block" htmlFor="prod-price">Price (GHS)</label>
                     <input
                       id="prod-price"
                       type="number"
@@ -585,7 +585,7 @@ export default function AdminProductsPage() {
                           className="grid grid-cols-2 gap-3 mt-2 overflow-hidden"
                         >
                           <div className="space-y-1.5 pb-2">
-                            <label className="text-[9px] font-bold text-zinc-400 dark:text-zinc-400 uppercase tracking-wider block" htmlFor="old-price">Old Price (GH₵)</label>
+                            <label className="text-[9px] font-bold text-zinc-400 dark:text-zinc-400 uppercase tracking-wider block" htmlFor="old-price">Old Price (GHS)</label>
                             <input
                               id="old-price"
                               type="number"
@@ -598,7 +598,7 @@ export default function AdminProductsPage() {
                             />
                           </div>
                           <div className="space-y-1.5 pb-2">
-                            <label className="text-[9px] font-bold text-zinc-400 dark:text-zinc-400 uppercase tracking-wider block" htmlFor="new-price">New Price (GH₵)</label>
+                            <label className="text-[9px] font-bold text-zinc-400 dark:text-zinc-400 uppercase tracking-wider block" htmlFor="new-price">New Price (GHS)</label>
                             <input
                               id="new-price"
                               type="number"
@@ -718,7 +718,7 @@ export default function AdminProductsPage() {
                           )}
                           {prod.flashSale && (
                             <span className="text-[8px] font-extrabold uppercase tracking-wider text-rose-600 dark:text-rose-450 bg-rose-50 dark:bg-rose-955/20 border border-rose-100 dark:border-rose-900/60 px-1.5 py-0.5 rounded-md shadow-xs">
-                              Flash Sale (${prod.oldPrice} → ${prod.newPrice})
+                              Flash Sale (GHS {prod.oldPrice} → GHS {prod.newPrice})
                             </span>
                           )}
                           {prod.sizes && prod.sizes.length > 0 && (
@@ -748,7 +748,7 @@ export default function AdminProductsPage() {
                       </div>
                     </td>
                     <td className="px-6 py-4 font-extrabold text-zinc-900 dark:text-zinc-50 font-mono">
-                      GH₵{prod.price}
+                      GHS {prod.price}
                     </td>
                     <td className="px-6 py-4">
                       <select

@@ -181,7 +181,7 @@ export default function CategoryList({ products }: CategoryListProps) {
           <div className="flex-1 space-y-1">
             <div className="flex justify-between items-center text-[10px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider">
               <span>Price Limit</span>
-              <span className="text-zinc-700 dark:text-zinc-300 font-extrabold">${maxPrice}</span>
+              <span className="text-zinc-700 dark:text-zinc-300 font-extrabold">GHS {maxPrice}</span>
             </div>
             <input
               type="range"
@@ -262,9 +262,9 @@ export default function CategoryList({ products }: CategoryListProps) {
                   {/* Pricing and Actions */}
                   <div className="mt-4">
                     <div className="flex items-baseline gap-2">
-                      <span className="font-extrabold text-lg text-zinc-900 dark:text-zinc-50">${product.price}</span>
+                      <span className="font-extrabold text-lg text-zinc-900 dark:text-zinc-50">GHS {product.price}</span>
                       {hasSale && (
-                        <span className="text-xs text-zinc-400 line-through">${displayOriginalPrice}</span>
+                        <span className="text-xs text-zinc-400 line-through">GHS {displayOriginalPrice}</span>
                       )}
                     </div>
 
@@ -472,9 +472,9 @@ export default function CategoryList({ products }: CategoryListProps) {
 
                   {/* Pricing Block */}
                   <div className="pt-2 flex items-baseline gap-2.5">
-                    <span className="text-2xl font-extrabold text-zinc-900 dark:text-zinc-50">${selectedProduct.price}</span>
+                    <span className="text-2xl font-extrabold text-zinc-900 dark:text-zinc-50">GHS {selectedProduct.price}</span>
                     {(selectedProduct.originalPrice || selectedProduct.oldPrice) && (
-                      <span className="text-sm text-zinc-400 line-through">${selectedProduct.originalPrice || selectedProduct.oldPrice}</span>
+                      <span className="text-sm text-zinc-400 line-through">GHS {selectedProduct.originalPrice || selectedProduct.oldPrice}</span>
                     )}
                   </div>
                 </div>

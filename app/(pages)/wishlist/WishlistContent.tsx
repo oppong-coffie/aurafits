@@ -165,7 +165,7 @@ export default function WishlistContent({ initialItems = [] }: WishlistContentPr
                       {/* Price & Quantity Info */}
                       <div className="flex items-center justify-between mt-3">
                         <span className="font-extrabold text-base text-zinc-900 dark:text-zinc-50">
-                          GH₵{p.price}
+                          GHS {p.price}
                         </span>
                         <span className="text-[11px] text-zinc-400 font-semibold bg-zinc-50 dark:bg-zinc-900/60 px-2 py-0.5 rounded-lg border border-zinc-200/20 dark:border-zinc-850/40">
                           Qty: {item.quantity}

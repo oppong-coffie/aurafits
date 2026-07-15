@@ -224,8 +224,8 @@ export async function updateProduct(request: Request, id: string) {
     }
     
     Object.keys(updateData).forEach((key) => {
-      if (updateData[key] !== undefined) {
-        (product as any)[key] = updateData[key];
+      if ((updateData as any)[key] !== undefined) {
+        (product as any)[key] = (updateData as any)[key];
       }
     });
 

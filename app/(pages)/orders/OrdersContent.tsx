@@ -143,7 +143,7 @@ export default function OrdersContent({ items = [] }: OrdersContentProps) {
                     </div>
                     <div className="text-right">
                       <span className="text-xs text-zinc-400 dark:text-zinc-500 block">Total Price</span>
-                      <span className="text-sm font-extrabold text-zinc-900 dark:text-zinc-100">GH₵{p.price * item.quantity}</span>
+                      <span className="text-sm font-extrabold text-zinc-900 dark:text-zinc-100">GHS {p.price * item.quantity}</span>
                     </div>
                   </div>
 
@@ -175,7 +175,7 @@ export default function OrdersContent({ items = [] }: OrdersContentProps) {
                       {/* Detail counts and tracking action */}
                       <div className="flex flex-wrap items-center justify-between gap-4 mt-2 pt-2 border-t border-zinc-100 dark:border-zinc-800/40">
                         <div className="flex items-center gap-4 text-xs font-semibold text-zinc-450 dark:text-zinc-400">
-                          <span>Price: GH₵{p.price}</span>
+                          <span>Price: GHS {p.price}</span>
                           <span>Quantity: {item.quantity}</span>
                         </div>
                         <button
@@ -208,7 +208,7 @@ export default function OrdersContent({ items = [] }: OrdersContentProps) {
               <div className="grid grid-cols-2 gap-4">
                 <div className="bg-zinc-50 dark:bg-zinc-950/40 p-4 rounded-2xl border border-zinc-200/20 dark:border-zinc-850/30">
                   <span className="text-[10px] font-extrabold text-zinc-400 uppercase tracking-widest block">Total Spent</span>
-                  <span className="text-xl font-extrabold text-violet-600 dark:text-violet-400 mt-1 block">GH₵{totalSpent}</span>
+                  <span className="text-xl font-extrabold text-violet-600 dark:text-violet-400 mt-1 block">GHS {totalSpent}</span>
                 </div>
                 <div className="bg-zinc-50 dark:bg-zinc-950/40 p-4 rounded-2xl border border-zinc-200/20 dark:border-zinc-850/30">
                   <span className="text-[10px] font-extrabold text-zinc-400 uppercase tracking-widest block">Items Ordered</span>

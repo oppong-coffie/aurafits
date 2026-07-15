@@ -290,7 +290,7 @@ export default function AdminDashboardHome() {
 
                             {/* Value */}
                             <td className="px-5 py-4 text-right">
-                              <span className="font-extrabold text-xs text-zinc-900 dark:text-zinc-50">GH₵{ord.totalValue}</span>
+                              <span className="font-extrabold text-xs text-zinc-900 dark:text-zinc-50">GHS {ord.totalValue}</span>
                             </td>
 
                             {/* Action Buttons */}
@@ -430,7 +430,7 @@ export default function AdminDashboardHome() {
                             </div>
                             <div className="text-right">
                               <span className="text-[10px] text-zinc-400 dark:text-zinc-500 block">Total</span>
-                              <span className="font-black text-sm text-zinc-900 dark:text-zinc-50">GH₵{ord.totalValue}</span>
+                              <span className="font-black text-sm text-zinc-900 dark:text-zinc-50">GHS {ord.totalValue}</span>
                             </div>
                           </div>
                         </div>
@@ -555,7 +555,7 @@ export default function AdminDashboardHome() {
                     </div>
                   </div>
                   <div className="text-right shrink-0">
-                    <span className="font-black text-sm text-zinc-900 dark:text-zinc-50 block">${p.totalValue}</span>
+                    <span className="font-black text-sm text-zinc-900 dark:text-zinc-50 block">GHS {p.totalValue}</span>
                     <span className="inline-flex items-center gap-1 bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-100 dark:border-emerald-900/40 text-emerald-600 dark:text-emerald-400 text-[9px] font-extrabold px-1.5 py-0.5 rounded shadow-sm mt-1 uppercase">
                       Completed
                     </span>
@@ -602,8 +602,8 @@ export default function AdminDashboardHome() {
                     </div>
                   </div>
                   <div className="text-right shrink-0">
-                    <span className="font-black text-sm text-zinc-900 dark:text-zinc-50 block">${p.totalValue}</span>
-                    <span className="inline-flex items-center gap-1 bg-rose-50 dark:bg-rose-950/20 border border-rose-100 dark:border-rose-900/40 text-rose-600 dark:text-rose-400 text-[9px] font-extrabold px-1.5 py-0.5 rounded shadow-sm mt-1 uppercase">
+                    <span className="font-black text-sm text-zinc-900 dark:text-zinc-50 block">GHS {p.totalValue}</span>
+                    <span className="inline-flex items-center gap-1 bg-rose-50 dark:bg-rose-950/20 border border-rose-100 dark:border-rose-900/40 text-rose-600 dark:text-rose-450 text-[9px] font-extrabold px-1.5 py-0.5 rounded shadow-sm mt-1 uppercase">
                       Rejected
                     </span>
                   </div>
@@ -634,7 +634,7 @@ export default function AdminDashboardHome() {
           ].map((bar, i) => (
             <div key={i} className="flex-1 flex flex-col items-center gap-2 group h-full justify-end">
               <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-zinc-900 dark:bg-zinc-50 text-white dark:text-zinc-950 text-[10px] font-extrabold py-1 px-2.5 rounded-lg -translate-y-1 shadow-md">
-                ${bar.value}
+                GHS {bar.value}
               </div>
               <div className="w-full flex items-end justify-end h-full min-h-[4px]">
                 <div className={`w-full ${bar.pct} bg-gradient-to-t ${bar.color} rounded-t-xl group-hover:opacity-90 transition-all duration-300 shadow-sm`} />

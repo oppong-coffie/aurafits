@@ -71,6 +71,7 @@ export default function Footer() {
             <li><Link href="/orders" className="hover:text-violet-600 dark:hover:text-violet-400 transition-colors">Track Orders</Link></li>
             <li><Link href="/wishlist" className="hover:text-violet-600 dark:hover:text-violet-400 transition-colors">Wishlist</Link></li>
             <li><Link href="/cart" className="hover:text-violet-600 dark:hover:text-violet-400 transition-colors">Shopping Bag</Link></li>
+            <li><Link href="/policies" className="hover:text-violet-600 dark:hover:text-violet-400 transition-colors">Policies & Terms</Link></li>
             <li><Link href="/auth" className="hover:text-violet-600 dark:hover:text-violet-400 transition-colors">Developer Playground</Link></li>
           </ul>
         </div>
@@ -105,7 +106,15 @@ export default function Footer() {
       <div className="border-t border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950/40 py-6 transition-colors duration-200">
         <div className="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row justify-between items-center gap-4 text-[11px] text-zinc-500 dark:text-zinc-400">
           <span>&copy; {new Date().getFullYear()} AuraFitsGH Inc. All rights reserved.</span>
-          <div className="flex gap-4">
+          <div className="flex flex-wrap gap-x-3 gap-y-1 justify-center items-center text-[10px]">
+            <Link href="/policies#terms" className="hover:text-violet-600 dark:hover:text-violet-400 transition-colors">Terms</Link>
+            <span className="text-zinc-350 dark:text-zinc-800">&bull;</span>
+            <Link href="/policies#refunds" className="hover:text-violet-600 dark:hover:text-violet-400 transition-colors">Refunds</Link>
+            <span className="text-zinc-350 dark:text-zinc-800">&bull;</span>
+            <Link href="/policies#delivery" className="hover:text-violet-600 dark:hover:text-violet-400 transition-colors">Delivery Time</Link>
+            <span className="text-zinc-350 dark:text-zinc-800">&bull;</span>
+            <Link href="/policies#privacy" className="hover:text-violet-600 dark:hover:text-violet-400 transition-colors">Privacy</Link>
+            <span className="text-zinc-350 dark:text-zinc-800">|</span>
             <span>Powered by AuraFits Technologies</span>
           </div>
         </div>
