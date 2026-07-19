@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   UserRoundCog, 
   Sun, 
@@ -104,7 +105,7 @@ export default function Navbar({ activeUser, logoutAction }: NavbarProps) {
   }, []);
 
   return (
-    <nav className="flex justify-between items-center px-3 sm:px-6 md:px-12 py-3 sm:py-4 border-b border-zinc-200 dark:border-zinc-800/80 bg-white/80 dark:bg-zinc-950/85 backdrop-blur-md sticky top-0 z-50 transition-colors duration-200 w-full overflow-hidden">
+    <nav className="flex justify-between items-center px-3 sm:px-6 md:px-12 py-3 sm:py-4 border-b border-zinc-200 dark:border-zinc-800/80 bg-white/80 dark:bg-zinc-950/85 backdrop-blur-md sticky top-0 z-[100] transition-colors duration-200 w-full">
       <div className="flex items-center gap-1.5 sm:gap-4 min-w-0">
         {/* Menu Icon with Click Dropdown */}
         <div className="relative flex-shrink-0" ref={menuRef}>
@@ -117,23 +118,31 @@ export default function Navbar({ activeUser, logoutAction }: NavbarProps) {
           </button>
 
           {/* Categories Dropdown */}
-          {isMenuOpen && (
-            <div className="absolute left-0 mt-2 w-52 max-w-[calc(100vw-1.5rem)] bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-xl py-2 z-50 text-sm transform origin-top-left transition-all duration-200 backdrop-blur-md">
-              <div className="px-4 py-2 border-b border-zinc-100 dark:border-zinc-800 mb-1">
-                <span className="font-bold text-[10px] uppercase text-zinc-400 dark:text-zinc-500 tracking-wider">Shop Categories</span>
-              </div>
-              {categories.map((category) => (
-                <Link 
-                  key={category.slug} 
-                  href={`/category/${category.slug}`}
-                  onClick={() => setIsMenuOpen(false)}
-                  className="block px-4 py-2.5 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors duration-150"
-                >
-                  {category.name}
-                </Link>
-              ))}
-            </div>
-          )}
+          <AnimatePresence>
+            {isMenuOpen && (
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.95, y: -10 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95, y: -10 }}
+                transition={{ duration: 0.18, ease: "easeOut" }}
+                className="absolute left-0 mt-2 w-52 max-w-[calc(100vw-1.5rem)] bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-xl py-2 z-[1000] text-sm transform origin-top-left backdrop-blur-md"
+              >
+                <div className="px-4 py-2 border-b border-zinc-100 dark:border-zinc-800 mb-1">
+                  <span className="font-bold text-[10px] uppercase text-zinc-400 dark:text-zinc-500 tracking-wider">Shop Categories</span>
+                </div>
+                {categories.map((category) => (
+                  <Link 
+                    key={category.slug} 
+                    href={`/category/${category.slug}`}
+                    onClick={() => setIsMenuOpen(false)}
+                    className="block px-4 py-2.5 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors duration-150"
+                  >
+                    {category.name}
+                  </Link>
+                ))}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
         <Link href="/" className="flex items-center gap-2 sm:gap-3 font-extrabold text-base sm:text-xl text-zinc-900 dark:text-zinc-50 no-underline tracking-tight min-w-0">
@@ -181,65 +190,73 @@ export default function Navbar({ activeUser, logoutAction }: NavbarProps) {
             </button>
 
             {/* Dropdown Menu */}
-            {isOpen && (
-              <div className="absolute right-0 mt-2 w-52 max-w-[calc(100vw-1.5rem)] bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-xl py-2 z-50 text-sm transform origin-top-right transition-all duration-200 backdrop-blur-md">
-                {/* User profile header */}
-                <div className="px-4 py-3 border-b border-zinc-100 dark:border-zinc-800 mb-1">
-                  <p className="font-bold text-zinc-800 dark:text-zinc-200 truncate">{activeUser.name}</p>
-                  <p className="text-[11px] text-zinc-500 truncate dark:text-zinc-400 leading-tight mt-0.5">{activeUser.email}</p>
-                </div>
-
-                <Link 
-                  href="/cart" 
-                  onClick={() => setIsOpen(false)}
-                  className="flex items-center gap-2.5 px-4 py-2 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors w-full text-left"
+            <AnimatePresence>
+              {isOpen && (
+                <motion.div 
+                  initial={{ opacity: 0, scale: 0.95, y: -10 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95, y: -10 }}
+                  transition={{ duration: 0.18, ease: "easeOut" }}
+                  className="absolute right-0 mt-2 w-52 max-w-[calc(100vw-1.5rem)] bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-xl py-2 z-[1000] text-sm transform origin-top-right backdrop-blur-md"
                 >
-                  <ShoppingCart size={16} className="text-zinc-400" />
-                  <span>Cart</span>
-                </Link>
+                  {/* User profile header */}
+                  <div className="px-4 py-3 border-b border-zinc-100 dark:border-zinc-800 mb-1">
+                    <p className="font-bold text-zinc-800 dark:text-zinc-200 truncate">{activeUser.name}</p>
+                    <p className="text-[11px] text-zinc-500 truncate dark:text-zinc-400 leading-tight mt-0.5">{activeUser.email}</p>
+                  </div>
 
-                <Link 
-                  href="/orders" 
-                  onClick={() => setIsOpen(false)}
-                  className="flex items-center gap-2.5 px-4 py-2 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors w-full text-left"
-                >
-                  <Package size={16} className="text-zinc-400" />
-                  <span>Orders</span>
-                </Link>
-
-                <Link 
-                  href="/wishlist" 
-                  onClick={() => setIsOpen(false)}
-                  className="flex items-center gap-2.5 px-4 py-2 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors w-full text-left"
-                >
-                  <Heart size={16} className="text-zinc-400" />
-                  <span>Wishlist</span>
-                </Link>
-
-                {activeUser.role === 'admin' && (
                   <Link 
-                    href="/adminhome" 
+                    href="/cart" 
                     onClick={() => setIsOpen(false)}
-                    className="flex items-center gap-2.5 px-4 py-2 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors w-full text-left font-semibold"
+                    className="flex items-center gap-2.5 px-4 py-2 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors w-full text-left"
                   >
-                    <ShieldCheck size={16} className="text-pink-600 dark:text-pink-400" />
-                    <span>Admin Panel</span>
+                    <ShoppingCart size={16} className="text-zinc-400" />
+                    <span>Cart</span>
                   </Link>
-                )}
 
-                <div className="border-t border-zinc-100 dark:border-zinc-800 mt-1 pt-1">
-                  <form action={logoutAction} onSubmit={() => setIsOpen(false)}>
-                    <button 
-                      type="submit" 
-                      className="flex items-center gap-2.5 px-4 py-2.5 text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-colors w-full text-left font-semibold cursor-pointer"
+                  <Link 
+                    href="/orders" 
+                    onClick={() => setIsOpen(false)}
+                    className="flex items-center gap-2.5 px-4 py-2 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors w-full text-left"
+                  >
+                    <Package size={16} className="text-zinc-400" />
+                    <span>Orders</span>
+                  </Link>
+
+                  <Link 
+                    href="/wishlist" 
+                    onClick={() => setIsOpen(false)}
+                    className="flex items-center gap-2.5 px-4 py-2 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors w-full text-left"
+                  >
+                    <Heart size={16} className="text-zinc-400" />
+                    <span>Wishlist</span>
+                  </Link>
+
+                  {activeUser.role === 'admin' && (
+                    <Link 
+                      href="/adminhome" 
+                      onClick={() => setIsOpen(false)}
+                      className="flex items-center gap-2.5 px-4 py-2 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors w-full text-left font-semibold"
                     >
-                      <LogOut size={16} />
-                      <span>Log Out</span>
-                    </button>
-                  </form>
-                </div>
-              </div>
-            )}
+                      <ShieldCheck size={16} className="text-pink-600 dark:text-pink-400" />
+                      <span>Admin Panel</span>
+                    </Link>
+                  )}
+
+                  <div className="border-t border-zinc-100 dark:border-zinc-800 mt-1 pt-1">
+                    <form action={logoutAction} onSubmit={() => setIsOpen(false)}>
+                      <button 
+                        type="submit" 
+                        className="flex items-center gap-2.5 px-4 py-2.5 text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-colors w-full text-left font-semibold cursor-pointer"
+                      >
+                        <LogOut size={16} />
+                        <span>Log Out</span>
+                      </button>
+                    </form>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         ) : (
           /* Sign In Button directly in Navbar */
