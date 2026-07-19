@@ -149,7 +149,7 @@ export default function PoliciesContent() {
                             1. Electronic Communications
                           </h3>
                           <p className="pl-5 text-[11px] text-zinc-500 dark:text-zinc-400 leading-relaxed">
-                            When you place an order, send us a WhatsApp message, or use our developer playgrounds, you communicate with us electronically. You consent to receive communications from us (via email, SMS text notifications, or messaging networks). You agree that all notices, disclosures, and order details satisfy legal requirements.
+                            When you place an order or send us a WhatsApp message, you communicate with us electronically. You consent to receive communications from us (via email, SMS text notifications, or messaging networks). You agree that all notices, disclosures, and order details satisfy legal requirements.
                           </p>
                         </div>
 

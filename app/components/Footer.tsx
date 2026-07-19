@@ -40,15 +40,15 @@ export default function Footer() {
           <div className="pt-2">
             <span className="block text-[10px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest mb-3">Follow Us</span>
             <div className="flex gap-2.5">
-              <a href="https://instagram.com/aurafitsgh" target="_blank" rel="noopener noreferrer" className="p-2 bg-zinc-50 dark:bg-zinc-900 hover:bg-zinc-100 dark:hover:bg-zinc-800/80 text-zinc-500 dark:text-zinc-400 hover:text-pink-500 dark:hover:text-pink-400 rounded-xl transition-all duration-200 border border-zinc-200/50 dark:border-zinc-800/50" aria-label="Instagram">
+              <a href="https://www.instagram.com/aura_fitsgh?igsh=MTZsNGRtcjIydnoxcA%3D%3D&utm_source=qr" target="_blank" rel="noopener noreferrer" className="p-2 bg-zinc-50 dark:bg-zinc-900 hover:bg-zinc-100 dark:hover:bg-zinc-800/80 text-zinc-500 dark:text-zinc-400 hover:text-pink-500 dark:hover:text-pink-400 rounded-xl transition-all duration-200 border border-zinc-200/50 dark:border-zinc-800/50" aria-label="Instagram">
                 <InstagramIcon size={15} />
               </a>
-              <a href="https://facebook.com/aurafitsgh" target="_blank" rel="noopener noreferrer" className="p-2 bg-zinc-50 dark:bg-zinc-900 hover:bg-zinc-100 dark:hover:bg-zinc-800/80 text-zinc-500 dark:text-zinc-400 hover:text-blue-500 dark:hover:text-blue-400 rounded-xl transition-all duration-200 border border-zinc-200/50 dark:border-zinc-800/50" aria-label="Facebook">
+              {/* <a href="https://facebook.com/aurafitsgh" target="_blank" rel="noopener noreferrer" className="p-2 bg-zinc-50 dark:bg-zinc-900 hover:bg-zinc-100 dark:hover:bg-zinc-800/80 text-zinc-500 dark:text-zinc-400 hover:text-blue-500 dark:hover:text-blue-400 rounded-xl transition-all duration-200 border border-zinc-200/50 dark:border-zinc-800/50" aria-label="Facebook">
                 <FacebookIcon size={15} />
               </a>
               <a href="https://twitter.com/aurafitsgh" target="_blank" rel="noopener noreferrer" className="p-2 bg-zinc-50 dark:bg-zinc-900 hover:bg-zinc-100 dark:hover:bg-zinc-800/80 text-zinc-500 dark:text-zinc-400 hover:text-sky-500 dark:hover:text-sky-400 rounded-xl transition-all duration-200 border border-zinc-200/50 dark:border-zinc-800/50" aria-label="Twitter">
                 <TwitterIcon size={15} />
-              </a>
+              </a> */}
             </div>
           </div>
         </div>
@@ -72,7 +72,6 @@ export default function Footer() {
             <li><Link href="/wishlist" className="hover:text-violet-600 dark:hover:text-violet-400 transition-colors">Wishlist</Link></li>
             <li><Link href="/cart" className="hover:text-violet-600 dark:hover:text-violet-400 transition-colors">Shopping Bag</Link></li>
             <li><Link href="/policies" className="hover:text-violet-600 dark:hover:text-violet-400 transition-colors">Policies & Terms</Link></li>
-            <li><Link href="/auth" className="hover:text-violet-600 dark:hover:text-violet-400 transition-colors">Developer Playground</Link></li>
           </ul>
         </div>
 

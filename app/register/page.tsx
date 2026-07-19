@@ -61,7 +61,7 @@ export default function RegisterPage() {
         initial={{ opacity: 0, y: 25, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ type: 'spring', stiffness: 180, damping: 20 }}
-        className="w-full max-w-md bg-white dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800/80 rounded-3xl p-6 md:p-8 shadow-xl flex flex-col backdrop-blur-sm transition-colors duration-200"
+        className="w-full max-w-md bg-white dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800 rounded-3xl p-6 md:p-8 shadow-xl flex flex-col backdrop-blur-sm transition-colors duration-200"
       >
         
         {/* Brand Logo & Name */}
@@ -90,7 +90,7 @@ export default function RegisterPage() {
               initial={{ opacity: 0, height: 0, y: -10 }}
               animate={{ opacity: 1, height: 'auto', y: 0 }}
               exit={{ opacity: 0, height: 0, y: -10 }}
-              className="bg-red-50 dark:bg-red-955/20 border border-red-200 dark:border-red-900/60 text-red-650 dark:text-red-400 rounded-2xl p-4 text-xs mb-4 font-bold flex items-center gap-2 overflow-hidden"
+              className="bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900/60 text-red-600 dark:text-red-400 rounded-2xl p-4 text-xs mb-4 font-bold flex items-center gap-2 overflow-hidden"
             >
               <span>⚠️</span>
               <span>{generalError}</span>
@@ -101,11 +101,11 @@ export default function RegisterPage() {
         {/* Form Body */}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] font-bold text-zinc-450 dark:text-zinc-500 uppercase tracking-wider" htmlFor="register-name">Full Name</label>
+            <label className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider" htmlFor="register-name">Full Name</label>
             <input
               id="register-name"
               type="text"
-              className="w-full bg-slate-50 dark:bg-zinc-955 border border-zinc-200 dark:border-zinc-800 focus:ring-2 focus:ring-violet-500/25 focus:border-violet-500 rounded-2xl px-4 py-3 text-xs text-zinc-900 dark:text-zinc-50 outline-none transition duration-150"
+              className="w-full bg-slate-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 focus:ring-2 focus:ring-pink-500/25 focus:border-pink-500 dark:focus:ring-pink-500/30 dark:focus:border-pink-400 rounded-2xl px-4 py-3 text-xs text-zinc-900 dark:text-zinc-50 placeholder-zinc-400 dark:placeholder-zinc-500 outline-none transition duration-150"
               placeholder="Jane Doe"
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -116,7 +116,7 @@ export default function RegisterPage() {
                 <motion.span 
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: 'auto' }}
-                  className="text-[11px] text-red-550 dark:text-red-400 font-semibold flex items-center gap-1 mt-1 overflow-hidden"
+                  className="text-[11px] text-red-600 dark:text-red-400 font-semibold flex items-center gap-1 mt-1 overflow-hidden"
                 >
                   ⚠️ {errors.name[0]}
                 </motion.span>
@@ -125,11 +125,11 @@ export default function RegisterPage() {
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] font-bold text-zinc-450 dark:text-zinc-500 uppercase tracking-wider" htmlFor="register-phone">Phone Number</label>
+            <label className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider" htmlFor="register-phone">Phone Number</label>
             <input
               id="register-phone"
               type="tel"
-              className="w-full bg-slate-50 dark:bg-zinc-955 border border-zinc-200 dark:border-zinc-800 focus:ring-2 focus:ring-violet-500/25 focus:border-violet-500 rounded-2xl px-4 py-3 text-xs text-zinc-900 dark:text-zinc-50 outline-none transition duration-150"
+              className="w-full bg-slate-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 focus:ring-2 focus:ring-pink-500/25 focus:border-pink-500 dark:focus:ring-pink-500/30 dark:focus:border-pink-400 rounded-2xl px-4 py-3 text-xs text-zinc-900 dark:text-zinc-50 placeholder-zinc-400 dark:placeholder-zinc-500 outline-none transition duration-150"
               placeholder="+233 24 123 4567"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
@@ -140,7 +140,7 @@ export default function RegisterPage() {
                 <motion.span 
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: 'auto' }}
-                  className="text-[11px] text-red-550 dark:text-red-400 font-semibold flex items-center gap-1 mt-1 overflow-hidden"
+                  className="text-[11px] text-red-600 dark:text-red-400 font-semibold flex items-center gap-1 mt-1 overflow-hidden"
                 >
                   ⚠️ {errors.phone[0]}
                 </motion.span>
@@ -149,11 +149,11 @@ export default function RegisterPage() {
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] font-bold text-zinc-450 dark:text-zinc-500 uppercase tracking-wider" htmlFor="register-address">Delivery Address</label>
+            <label className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider" htmlFor="register-address">Delivery Address</label>
             <input
               id="register-address"
               type="text"
-              className="w-full bg-slate-50 dark:bg-zinc-955 border border-zinc-200 dark:border-zinc-800 focus:ring-2 focus:ring-violet-500/25 focus:border-violet-500 rounded-2xl px-4 py-3 text-xs text-zinc-900 dark:text-zinc-50 outline-none transition duration-150"
+              className="w-full bg-slate-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 focus:ring-2 focus:ring-pink-500/25 focus:border-pink-500 dark:focus:ring-pink-500/30 dark:focus:border-pink-400 rounded-2xl px-4 py-3 text-xs text-zinc-900 dark:text-zinc-50 placeholder-zinc-400 dark:placeholder-zinc-500 outline-none transition duration-150"
               placeholder="123 Ring Road, Accra, Ghana"
               value={address}
               onChange={(e) => setAddress(e.target.value)}
@@ -164,7 +164,7 @@ export default function RegisterPage() {
                 <motion.span 
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: 'auto' }}
-                  className="text-[11px] text-red-550 dark:text-red-400 font-semibold flex items-center gap-1 mt-1 overflow-hidden"
+                  className="text-[11px] text-red-600 dark:text-red-400 font-semibold flex items-center gap-1 mt-1 overflow-hidden"
                 >
                   ⚠️ {errors.address[0]}
                 </motion.span>
@@ -173,11 +173,11 @@ export default function RegisterPage() {
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] font-bold text-zinc-450 dark:text-zinc-500 uppercase tracking-wider" htmlFor="register-email">Email Address</label>
+            <label className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider" htmlFor="register-email">Email Address</label>
             <input
               id="register-email"
               type="email"
-              className="w-full bg-slate-50 dark:bg-zinc-955 border border-zinc-200 dark:border-zinc-800 focus:ring-2 focus:ring-violet-500/25 focus:border-violet-500 rounded-2xl px-4 py-3 text-xs text-zinc-900 dark:text-zinc-50 outline-none transition duration-150"
+              className="w-full bg-slate-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 focus:ring-2 focus:ring-pink-500/25 focus:border-pink-500 dark:focus:ring-pink-500/30 dark:focus:border-pink-400 rounded-2xl px-4 py-3 text-xs text-zinc-900 dark:text-zinc-50 placeholder-zinc-400 dark:placeholder-zinc-500 outline-none transition duration-150"
               placeholder="jane.doe@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -188,7 +188,7 @@ export default function RegisterPage() {
                 <motion.span 
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: 'auto' }}
-                  className="text-[11px] text-red-550 dark:text-red-400 font-semibold flex items-center gap-1 mt-1 overflow-hidden"
+                  className="text-[11px] text-red-600 dark:text-red-400 font-semibold flex items-center gap-1 mt-1 overflow-hidden"
                 >
                   ⚠️ {errors.email[0]}
                 </motion.span>
@@ -197,12 +197,12 @@ export default function RegisterPage() {
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] font-bold text-zinc-450 dark:text-zinc-500 uppercase tracking-wider" htmlFor="register-password">Password</label>
+            <label className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider" htmlFor="register-password">Password</label>
             <div className="relative">
               <input
                 id="register-password"
                 type={showPassword ? "text" : "password"}
-                className="w-full bg-slate-50 dark:bg-zinc-955 border border-zinc-200 dark:border-zinc-800 focus:ring-2 focus:ring-violet-500/25 focus:border-violet-500 rounded-2xl pl-4 pr-11 py-3 text-xs text-zinc-900 dark:text-zinc-50 outline-none transition duration-150"
+                className="w-full bg-slate-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 focus:ring-2 focus:ring-pink-500/25 focus:border-pink-500 dark:focus:ring-pink-500/30 dark:focus:border-pink-400 rounded-2xl pl-4 pr-11 py-3 text-xs text-zinc-900 dark:text-zinc-50 placeholder-zinc-400 dark:placeholder-zinc-500 outline-none transition duration-150"
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -211,7 +211,7 @@ export default function RegisterPage() {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3.5 top-1/2 -translate-y-1/2 p-1.5 text-zinc-450 hover:text-zinc-700 dark:text-zinc-500 dark:hover:text-zinc-350 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors cursor-pointer"
+                className="absolute right-3.5 top-1/2 -translate-y-1/2 p-1.5 text-zinc-400 hover:text-zinc-600 dark:text-zinc-400 dark:hover:text-zinc-200 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
                 aria-label={showPassword ? "Hide password" : "Show password"}
               >
                 {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -222,7 +222,7 @@ export default function RegisterPage() {
                 <motion.span 
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: 'auto' }}
-                  className="text-[11px] text-red-550 dark:text-red-400 font-semibold flex items-center gap-1 mt-1 overflow-hidden"
+                  className="text-[11px] text-red-600 dark:text-red-400 font-semibold flex items-center gap-1 mt-1 overflow-hidden"
                 >
                   ⚠️ {errors.password[0]}
                 </motion.span>
@@ -232,7 +232,7 @@ export default function RegisterPage() {
 
           <button 
             type="submit" 
-            className="w-full flex items-center justify-center gap-2 bg-pink-500 hover:bg-pink-400 text-white font-bold rounded-2xl py-3.5 transition shadow-sm cursor-pointer disabled:opacity-50 text-xs mt-4 uppercase tracking-wider"
+            className="w-full flex items-center justify-center gap-2 bg-pink-500 hover:bg-pink-400 active:bg-pink-600 text-white font-bold rounded-2xl py-3.5 transition shadow-sm cursor-pointer disabled:opacity-50 text-xs mt-4 uppercase tracking-wider active:scale-[0.99]"
             disabled={isLoading}
           >
             {isLoading ? (
@@ -247,7 +247,7 @@ export default function RegisterPage() {
         {/* Bottom Switch Link */}
         <div className="text-center text-xs text-zinc-500 dark:text-zinc-400 mt-6">
           Already have an account? 
-          <Link href="/login" className="text-violet-650 dark:text-violet-400 hover:underline font-semibold ml-1.5">
+          <Link href="/login" className="text-pink-600 dark:text-pink-400 hover:underline font-semibold ml-1.5">
             Sign In
           </Link>
         </div>
