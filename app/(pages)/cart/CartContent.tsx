@@ -230,8 +230,8 @@ export default function CartContent({ initialItems = [] }: CartContentProps) {
 
   // Calculations
   const subtotal = items.reduce((sum, item) => sum + (item.productId.price * item.quantity), 0);
-  const shipping = subtotal > 200 || subtotal === 0 ? 0 : 15;
-  const tax = Math.round(subtotal * 0.08 * 100) / 100;
+  const shipping = 0
+  const tax = Math.round(subtotal * 0.00 * 100) / 100;
   const total = Math.round((subtotal + shipping + tax) * 100) / 100;
 
   return (
@@ -433,7 +433,7 @@ export default function CartContent({ initialItems = [] }: CartContentProps) {
                     </span>
                   </div>
                   <div className="flex justify-between text-zinc-550 dark:text-zinc-400">
-                    <span>Estimated Tax (8%)</span>
+                    <span>Estimated Tax (0%)</span>
                     <span className="text-zinc-900 dark:text-zinc-50">GHS {tax}</span>
                   </div>
                   
