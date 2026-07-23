@@ -8,7 +8,6 @@ import {
   ArrowLeft,
   Calendar,
   CheckCircle2,
-  DollarSign,
   X
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -27,6 +26,8 @@ interface CartItem {
   userId: string;
   productId: Product;
   quantity: number;
+  size?: string | null;
+  color?: string | null;
   createdAt: string;
   status: string;
 }
@@ -44,6 +45,7 @@ export default function OrdersContent({ items = [] }: OrdersContentProps) {
         return 4; // Delivered
       case 'accepted':
         return 3; // In Transit
+      case 'paid':
       case 'pending':
       default:
         return 2; // Processing
@@ -56,6 +58,9 @@ export default function OrdersContent({ items = [] }: OrdersContentProps) {
         return "Your premium package has been successfully delivered. Enjoy your curated wardrobe!";
       case 'accepted':
         return "Your order has been shipped and is currently in transit to your local distribution hub.";
+      case 'cancelled':
+        return "This order was cancelled or flagged. Please contact customer support if you need assistance.";
+      case 'paid':
       case 'pending':
       default:
         return "We have successfully received your payment. Our warehouse team is currently preparing your order.";
@@ -65,6 +70,7 @@ export default function OrdersContent({ items = [] }: OrdersContentProps) {
   // Format Date helper
   const formatDate = (isoString: string) => {
     const date = new Date(isoString);
+    if (isNaN(date.getTime())) return isoString || 'Recent';
     return date.toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
@@ -74,9 +80,48 @@ export default function OrdersContent({ items = [] }: OrdersContentProps) {
     });
   };
 
+  const renderStatusBadge = (status: string) => {
+    switch (status) {
+      case 'completed':
+        return (
+          <span className="inline-flex items-center gap-1 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 text-[10px] font-extrabold px-2.5 py-0.5 rounded-lg border border-emerald-200/60 dark:border-emerald-900/50 uppercase tracking-wider">
+            <CheckCircle2 size={11} className="fill-current" />
+            <span>Delivered & Completed</span>
+          </span>
+        );
+      case 'accepted':
+        return (
+          <span className="inline-flex items-center gap-1 bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 text-[10px] font-extrabold px-2.5 py-0.5 rounded-lg border border-indigo-200/60 dark:border-indigo-900/50 uppercase tracking-wider">
+            <Package size={11} />
+            <span>In Transit</span>
+          </span>
+        );
+      case 'cancelled':
+        return (
+          <span className="inline-flex items-center gap-1 bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 text-[10px] font-extrabold px-2.5 py-0.5 rounded-lg border border-rose-200/60 dark:border-rose-900/50 uppercase tracking-wider">
+            <X size={11} />
+            <span>Cancelled</span>
+          </span>
+        );
+      case 'paid':
+      case 'pending':
+      default:
+        return (
+          <span className="inline-flex items-center gap-1 bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 text-[10px] font-extrabold px-2.5 py-0.5 rounded-lg border border-amber-200/60 dark:border-amber-900/50 uppercase tracking-wider">
+            <CheckCircle2 size={11} className="fill-current" />
+            <span>Processing Order</span>
+          </span>
+        );
+    }
+  };
+
   // Calculations
-  const totalSpent = items.reduce((sum, item) => sum + (item.productId.price * item.quantity), 0);
+  const totalSpent = items.reduce((sum, item) => sum + (item.productId?.price || 0) * item.quantity, 0);
   const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
+
+  // Partition active vs completed orders
+  const activeOrders = items.filter(item => item.status !== 'completed');
+  const completedOrders = items.filter(item => item.status === 'completed');
 
   return (
     <div className="max-w-[1400px] mx-auto px-6 py-12 md:py-16">
@@ -101,99 +146,216 @@ export default function OrdersContent({ items = [] }: OrdersContentProps) {
       {items.length > 0 ? (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 items-start">
           {/* Order items list */}
-          <div className="lg:col-span-2 space-y-6">
-            {items.map((item, idx) => {
-              const p = item.productId;
-              const fallbackImage = `/featured${(idx % 4) + 1}.jpg`;
-              const formattedCategory = p.category === 'womens' ? "Women's" 
-                : p.category === 'mens' ? "Men's" 
-                : p.category === 'footwear' ? "Footwear" 
-                : p.category === 'active-wear' ? "Active Wear" 
-                : p.category === 'travel-set' ? "Travel Set" 
-                : p.category === 'lounge-wear' ? "Lounge Wear" 
-                : p.category;
+          <div className="lg:col-span-2 space-y-8">
 
-              // Mock transaction ID from mongoose ID
-              const mockOrderId = `ORD-${item._id.substring(item._id.length - 8).toUpperCase()}`;
+            {/* SECTION 1: ACTIVE / IN-PROGRESS ORDERS */}
+            {activeOrders.length > 0 && (
+              <div className="space-y-5">
+                {activeOrders.length > 0 && completedOrders.length > 0 && (
+                  <h2 className="text-sm font-extrabold text-zinc-500 dark:text-zinc-400 uppercase tracking-widest">
+                    Active & Processing Orders ({activeOrders.length})
+                  </h2>
+                )}
+                {activeOrders.map((item, idx) => {
+                  const p = item.productId;
+                  if (!p) return null;
+                  const fallbackImage = `/featured${(idx % 4) + 1}.jpg`;
+                  const formattedCategory = p.category === 'womens' ? "Women's" 
+                    : p.category === 'mens' ? "Men's" 
+                    : p.category === 'footwear' ? "Footwear" 
+                    : p.category === 'active-wear' ? "Active Wear" 
+                    : p.category === 'travel-set' ? "Travel Set" 
+                    : p.category === 'lounge-wear' ? "Lounge Wear" 
+                    : p.category;
 
-              return (
-                <motion.div 
-                  key={item._id}
-                  initial={{ opacity: 0, y: 15 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: idx * 0.05 }}
-                  className="bg-white dark:bg-zinc-900/40 rounded-3xl border border-zinc-200/50 dark:border-zinc-800/40 p-5 shadow-sm space-y-4"
-                >
-                  {/* Order Meta Header */}
-                  <div className="flex flex-wrap items-center justify-between gap-3 pb-3.5 border-b border-zinc-100 dark:border-zinc-800/50">
-                    <div className="space-y-0.5">
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs font-bold text-zinc-900 dark:text-zinc-100">
-                          Order {mockOrderId}
-                        </span>
-                        <span className="inline-flex items-center gap-1 bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-450 text-[10px] font-bold px-2 py-0.5 rounded-lg border border-emerald-100 dark:border-emerald-900/40">
-                          <CheckCircle2 size={10} className="fill-current" />
-                          <span>PAID</span>
-                        </span>
+                  const mockOrderId = `ORD-${item._id.substring(item._id.length - 8).toUpperCase()}`;
+
+                  return (
+                    <motion.div 
+                      key={item._id}
+                      initial={{ opacity: 0, y: 15 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3, delay: idx * 0.05 }}
+                      className="bg-white dark:bg-zinc-900/40 rounded-3xl border border-zinc-200/50 dark:border-zinc-800/40 p-5 shadow-sm space-y-4"
+                    >
+                      {/* Order Meta Header */}
+                      <div className="flex flex-wrap items-center justify-between gap-3 pb-3.5 border-b border-zinc-100 dark:border-zinc-800/50">
+                        <div className="space-y-1">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <span className="text-xs font-bold text-zinc-900 dark:text-zinc-100">
+                              Order {mockOrderId}
+                            </span>
+                            {renderStatusBadge(item.status)}
+                          </div>
+                          <span className="text-[10px] font-medium text-zinc-400 dark:text-zinc-550 flex items-center gap-1">
+                            <Calendar size={10} />
+                            {formatDate(item.createdAt)}
+                          </span>
+                        </div>
+                        <div className="text-right">
+                          <span className="text-xs text-zinc-400 dark:text-zinc-500 block">Total Price</span>
+                          <span className="text-sm font-extrabold text-zinc-900 dark:text-zinc-100">GHS {p.price * item.quantity}</span>
+                        </div>
                       </div>
-                      <span className="text-[10px] font-medium text-zinc-400 dark:text-zinc-550 flex items-center gap-1">
-                        <Calendar size={10} />
-                        {formatDate(item.createdAt)}
-                      </span>
-                    </div>
-                    <div className="text-right">
-                      <span className="text-xs text-zinc-400 dark:text-zinc-500 block">Total Price</span>
-                      <span className="text-sm font-extrabold text-zinc-900 dark:text-zinc-100">GHS {p.price * item.quantity}</span>
-                    </div>
-                  </div>
 
-                  {/* Product Details Grid */}
-                  <div className="flex gap-4">
-                    {/* Image */}
-                    <div className="relative aspect-[3/4] w-16 sm:w-20 rounded-xl overflow-hidden bg-zinc-100 dark:bg-zinc-900 shrink-0 border border-zinc-200/30 dark:border-zinc-800/30">
-                      <img 
-                        src={p.image || fallbackImage} 
-                        alt={p.name}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
+                      {/* Product Details Grid */}
+                      <div className="flex gap-4">
+                        {/* Image */}
+                        <div className="relative aspect-[3/4] w-16 sm:w-20 rounded-xl overflow-hidden bg-zinc-100 dark:bg-zinc-900 shrink-0 border border-zinc-200/30 dark:border-zinc-800/30">
+                          <img 
+                            src={p.image || fallbackImage} 
+                            alt={p.name}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
 
-                    {/* Content details */}
-                    <div className="flex-1 flex flex-col justify-between py-0.5 min-w-0">
+                        {/* Content details */}
+                        <div className="flex-1 flex flex-col justify-between py-0.5 min-w-0">
+                          <div>
+                            <span className="text-[9px] font-extrabold text-zinc-400 uppercase tracking-wider block">
+                              {formattedCategory}
+                            </span>
+                            <h3 className="font-bold text-sm text-zinc-900 dark:text-zinc-150 mt-0.5 truncate">
+                              {p.name}
+                            </h3>
+                            <div className="flex flex-wrap items-center gap-2 mt-1">
+                              <span className="text-[10px] text-zinc-500 font-medium">
+                                Type: {p.type ? p.type.toUpperCase() : 'STAPLE'}
+                              </span>
+                              {item.size && (
+                                <span className="text-[9px] font-bold text-violet-600 dark:text-violet-400 bg-violet-50 dark:bg-violet-950/40 px-1.5 py-0.5 rounded border border-violet-100 dark:border-violet-900/40">
+                                  Size: {item.size}
+                                </span>
+                              )}
+                              {item.color && (
+                                <span className="text-[9px] font-bold text-pink-600 dark:text-pink-400 bg-pink-50 dark:bg-pink-950/40 px-1.5 py-0.5 rounded border border-pink-100 dark:border-pink-900/40">
+                                  Color: {item.color}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Detail counts and tracking action */}
+                          <div className="flex flex-wrap items-center justify-between gap-4 mt-3 pt-2 border-t border-zinc-100 dark:border-zinc-800/40">
+                            <div className="flex items-center gap-4 text-xs font-semibold text-zinc-450 dark:text-zinc-400">
+                              <span>Price: GHS {p.price}</span>
+                              <span>Quantity: {item.quantity}</span>
+                            </div>
+                            <button
+                              onClick={() => setTrackingItem(item)}
+                              className="bg-pink-500 hover:bg-pink-400 text-white font-bold text-[10px] px-3.5 py-2 rounded-xl transition duration-150 shadow-xs cursor-pointer uppercase tracking-wider"
+                            >
+                              Track Package
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            )}
+
+            {/* SECTION DIVIDER & COMPLETED ORDERS */}
+            {completedOrders.length > 0 && (
+              <div className="space-y-6 pt-4">
+                {/* Visual Section Divider */}
+                <div className="pt-6 pb-2 border-t border-zinc-200 dark:border-zinc-800">
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 rounded-2xl bg-emerald-500/10 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 dark:border-emerald-900/40">
+                        <CheckCircle2 size={18} />
+                      </div>
                       <div>
-                        <span className="text-[9px] font-extrabold text-zinc-400 uppercase tracking-wider block">
-                          {formattedCategory}
-                        </span>
-                        <h3 className="font-bold text-sm text-zinc-900 dark:text-zinc-150 mt-0.5 truncate">
-                          {p.name}
-                        </h3>
-                        <p className="text-[11px] text-zinc-500 mt-0.5 font-medium">
-                          Type: {p.type ? p.type.toUpperCase() : 'STAPLE'}
+                        <h2 className="text-lg font-extrabold text-zinc-900 dark:text-zinc-50 tracking-tight">
+                          Completed & Delivered Orders
+                        </h2>
+                        <p className="text-xs text-zinc-500 dark:text-zinc-400">
+                          Archived orders successfully delivered to your doorstep.
                         </p>
                       </div>
-
-                      {/* Detail counts and tracking action */}
-                      <div className="flex flex-wrap items-center justify-between gap-4 mt-2 pt-2 border-t border-zinc-100 dark:border-zinc-800/40">
-                        <div className="flex items-center gap-4 text-xs font-semibold text-zinc-450 dark:text-zinc-400">
-                          <span>Price: GHS {p.price}</span>
-                          <span>Quantity: {item.quantity}</span>
-                        </div>
-                        <button
-                          onClick={() => setTrackingItem(item)}
-                          className="bg-pink-500 hover:bg-pink-400 text-white font-bold text-[10px] px-3.5 py-2 rounded-xl transition duration-150 shadow-xs cursor-pointer uppercase tracking-wider"
-                        >
-                          Track Package
-                        </button>
-                      </div>
                     </div>
+                    <span className="text-xs font-extrabold bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 px-3 py-1 rounded-full border border-emerald-200/50 dark:border-emerald-900/50 shrink-0">
+                      {completedOrders.length} {completedOrders.length === 1 ? 'Item' : 'Items'}
+                    </span>
                   </div>
-                </motion.div>
-              );
-            })}
+                </div>
+
+                {/* Completed Orders List */}
+                <div className="space-y-5">
+                  {completedOrders.map((item, idx) => {
+                    const p = item.productId;
+                    if (!p) return null;
+                    const fallbackImage = `/featured${(idx % 4) + 1}.jpg`;
+                    const formattedCategory = p.category === 'womens' ? "Women's" 
+                      : p.category === 'mens' ? "Men's" 
+                      : p.category === 'footwear' ? "Footwear" 
+                      : p.category === 'active-wear' ? "Active Wear" 
+                      : p.category === 'travel-set' ? "Travel Set" 
+                      : p.category === 'lounge-wear' ? "Lounge Wear" 
+                      : p.category;
+
+                    const mockOrderId = `ORD-${item._id.substring(item._id.length - 8).toUpperCase()}`;
+
+                    return (
+                      <motion.div 
+                        key={item._id}
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.2, delay: idx * 0.03 }}
+                        className="bg-emerald-50/20 dark:bg-emerald-950/10 rounded-xl border border-emerald-500/20 dark:border-emerald-900/30 p-2.5 shadow-2xs hover:border-emerald-500/40 transition duration-150 flex items-center justify-between gap-3 min-w-0"
+                      >
+                        {/* Left: Thumbnail & Details */}
+                        <div className="flex items-center gap-2.5 min-w-0">
+                          <div className="relative aspect-square w-10 rounded-lg overflow-hidden bg-zinc-100 dark:bg-zinc-800 shrink-0 border border-emerald-500/20 dark:border-emerald-900/30">
+                            <img 
+                              src={p.image || fallbackImage} 
+                              alt={p.name}
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+
+                          <div className="min-w-0">
+                            <div className="flex items-center gap-2">
+                              <h3 className="font-bold text-xs text-zinc-900 dark:text-zinc-100 truncate">
+                                {p.name}
+                              </h3>
+                              {renderStatusBadge(item.status)}
+                            </div>
+                            <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[10px] text-zinc-400 dark:text-zinc-500 mt-0.5 font-medium">
+                              <span>{mockOrderId}</span>
+                              <span>&bull;</span>
+                              <span>Qty: {item.quantity}</span>
+                              {item.size && <span className="font-bold text-violet-600 dark:text-violet-400">({item.size})</span>}
+                              {item.color && <span className="font-bold text-pink-600 dark:text-pink-400">({item.color})</span>}
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Right: Total Price & Action Button */}
+                        <div className="flex items-center gap-3 shrink-0">
+                          <div className="text-right">
+                            <span className="text-xs font-black text-emerald-600 dark:text-emerald-400 block">GHS {p.price * item.quantity}</span>
+                          </div>
+                          <button
+                            onClick={() => setTrackingItem(item)}
+                            className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[9px] px-2.5 py-1.5 rounded-lg transition duration-150 cursor-pointer uppercase tracking-wider flex items-center gap-1 shrink-0"
+                          >
+                            <CheckCircle2 size={10} />
+                            <span>Details</span>
+                          </button>
+                        </div>
+                      </motion.div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
           </div>
 
           {/* Order Summary/Metrics Widget */}
-          <div className="space-y-6">
+          <div className="space-y-6 lg:sticky lg:top-24">
             <motion.div 
               initial={{ opacity: 0, scale: 0.98 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -206,13 +368,25 @@ export default function OrdersContent({ items = [] }: OrdersContentProps) {
 
               {/* Stats Grid */}
               <div className="grid grid-cols-2 gap-4">
-                <div className="bg-zinc-50 dark:bg-zinc-950/40 p-4 rounded-2xl border border-zinc-200/20 dark:border-zinc-850/30">
+                <div className="bg-zinc-50 dark:bg-zinc-955/40 p-4 rounded-2xl border border-zinc-200/20 dark:border-zinc-850/30">
                   <span className="text-[10px] font-extrabold text-zinc-400 uppercase tracking-widest block">Total Spent</span>
                   <span className="text-xl font-extrabold text-violet-600 dark:text-violet-400 mt-1 block">GHS {totalSpent}</span>
                 </div>
-                <div className="bg-zinc-50 dark:bg-zinc-950/40 p-4 rounded-2xl border border-zinc-200/20 dark:border-zinc-850/30">
+                <div className="bg-zinc-50 dark:bg-zinc-955/40 p-4 rounded-2xl border border-zinc-200/20 dark:border-zinc-850/30">
                   <span className="text-[10px] font-extrabold text-zinc-400 uppercase tracking-widest block">Items Ordered</span>
                   <span className="text-xl font-extrabold text-violet-600 dark:text-violet-400 mt-1 block">{totalItems}</span>
+                </div>
+              </div>
+
+              {/* Breakdown */}
+              <div className="space-y-2 pt-2 text-xs font-semibold text-zinc-600 dark:text-zinc-400">
+                <div className="flex justify-between py-1 border-b border-zinc-100 dark:border-zinc-800/40">
+                  <span>Active Processing Orders</span>
+                  <span className="font-bold text-amber-600 dark:text-amber-400">{activeOrders.length}</span>
+                </div>
+                <div className="flex justify-between py-1 border-b border-zinc-100 dark:border-zinc-800/40">
+                  <span>Completed & Delivered</span>
+                  <span className="font-bold text-emerald-600 dark:text-emerald-400">{completedOrders.length}</span>
                 </div>
               </div>
 
@@ -224,7 +398,7 @@ export default function OrdersContent({ items = [] }: OrdersContentProps) {
                 </p>
                 <p className="flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0"></span>
-                  <span>Dispatched and currently in transit.</span>
+                  <span>Dispatched and handled by AuraFits Logistics.</span>
                 </p>
               </div>
             </motion.div>
@@ -291,7 +465,7 @@ export default function OrdersContent({ items = [] }: OrdersContentProps) {
                 <div className="flex items-center gap-2.5">
                   <Package className="text-pink-500 w-5 h-5 animate-pulse" />
                   <h3 className="font-extrabold text-base text-zinc-900 dark:text-zinc-55 tracking-tight">
-                    Track Package
+                    {trackingItem.status === 'completed' ? 'Order Delivered' : 'Track Package'}
                   </h3>
                 </div>
                 <button 
@@ -316,6 +490,12 @@ export default function OrdersContent({ items = [] }: OrdersContentProps) {
                     {trackingItem.productId.name}
                   </span>
                 </div>
+                {(trackingItem.size || trackingItem.color) && (
+                  <div className="flex gap-2 mt-2 pt-2 border-t border-zinc-200/20 dark:border-zinc-800/40 text-[10px]">
+                    {trackingItem.size && <span className="font-bold text-violet-600 dark:text-violet-400">Size: {trackingItem.size}</span>}
+                    {trackingItem.color && <span className="font-bold text-pink-600 dark:text-pink-400">Color: {trackingItem.color}</span>}
+                  </div>
+                )}
               </div>
 
               {/* Stepper Progress Bar */}
@@ -341,7 +521,7 @@ export default function OrdersContent({ items = [] }: OrdersContentProps) {
                   ].map((step, idx) => {
                     const stepNumber = idx + 1;
                     const currentStep = getTrackingStep(trackingItem.status);
-                    const isCompleted = stepNumber < currentStep;
+                    const isCompleted = stepNumber <= currentStep;
                     const isActive = stepNumber === currentStep;
                     const isPending = stepNumber > currentStep;
 

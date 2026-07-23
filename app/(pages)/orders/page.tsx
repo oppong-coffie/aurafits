@@ -41,8 +41,11 @@ export default async function OrdersPage() {
       createdAt: dbUser.createdAt,
     };
 
-    // Query and populate orders (status: 'paid')
-    const orderItems = await Cart.find({ userId: session.userId, status: 'paid' })
+    // Query and populate orders (status: 'paid', 'accepted', 'completed', 'cancelled')
+    const orderItems = await Cart.find({ 
+      userId: session.userId, 
+      status: { $in: ['paid', 'accepted', 'completed', 'cancelled'] } 
+    })
       .populate({
         path: 'productId',
         model: Product,
@@ -56,6 +59,8 @@ export default async function OrdersPage() {
         _id: item._id.toString(),
         userId: item.userId,
         quantity: item.quantity,
+        size: item.size || null,
+        color: item.color || null,
         createdAt: item.createdAt.toISOString(),
         status: item.status,
         productId: {
