@@ -42,19 +42,28 @@ export async function POST(request: Request) {
       );
     }
 
-    // Send order confirmation SMS if phone exists
+    const itemNames = cartItems
+      .map(item => item.productId?.name || 'Staple Item')
+      .join(', ');
+    const customerName = user?.name || 'Customer';
+    const totalAmount = cartItems.reduce((sum, item) => sum + ((item.productId?.price || 0) * (item.quantity || 1)), 0);
+
+    // Send order confirmation SMS to customer if phone exists
     if (user && user.phone) {
       try {
-        const itemNames = cartItems
-          .map(item => item.productId?.name || 'Staple Item')
-          .join(', ');
-        
         const smsMessage = `Hi ${user.name}, your AuraFits order of ${cartItems.length} item(s) (${itemNames}) has been successfully placed! We are preparing it for delivery. Thank you!`;
-        
         await sendSMS(user.phone, smsMessage);
       } catch (smsErr) {
-        console.error('Checkout SMS dispatch failed:', smsErr);
+        console.error('Checkout SMS dispatch to customer failed:', smsErr);
       }
+    }
+
+    // Also send payment notification SMS to 0246414197
+    try {
+      const adminSmsMessage = `[Successful Payment] ${customerName} placed order worth GHS ${totalAmount} for ${cartItems.length} item(s) (${itemNames}).`;
+      await sendSMS('0246414197', adminSmsMessage);
+    } catch (adminSmsErr) {
+      console.error('Payment SMS dispatch to 0246414197 failed:', adminSmsErr);
     }
 
     return NextResponse.json({

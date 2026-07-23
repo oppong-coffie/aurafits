@@ -57,17 +57,29 @@ export async function GET(request: Request) {
       { status: 'paid' }
     );
 
-    if (result.matchedCount > 0 && user && user.phone) {
+    if (result.matchedCount > 0) {
+      const itemNames = cartItems
+        .map(item => item.productId?.name || 'Staple Item')
+        .join(', ');
+      const customerName = user?.name || 'Customer';
+      const totalAmount = cartItems.reduce((sum, item) => sum + ((item.productId?.price || 0) * (item.quantity || 1)), 0);
+
+      // Send customer confirmation SMS if phone exists
+      if (user && user.phone) {
+        try {
+          const smsMessage = `Hi ${user.name}, your AuraFits order of ${cartItems.length} item(s) (${itemNames}) has been successfully placed (Paid via Paystack)! We are preparing it for delivery. Thank you!`;
+          await sendSMS(user.phone, smsMessage);
+        } catch (smsErr) {
+          console.error('Checkout SMS dispatch to customer failed:', smsErr);
+        }
+      }
+
+      // Also send payment notification SMS to 0246414197
       try {
-        const itemNames = cartItems
-          .map(item => item.productId?.name || 'Staple Item')
-          .join(', ');
-        
-        const smsMessage = `Hi ${user.name}, your AuraFits order of ${cartItems.length} item(s) (${itemNames}) has been successfully placed (Paid via Paystack)! We are preparing it for delivery. Thank you!`;
-        
-        await sendSMS(user.phone, smsMessage);
-      } catch (smsErr) {
-        console.error('Checkout SMS dispatch failed:', smsErr);
+        const adminSmsMessage = `[Successful Payment] ${customerName} paid GHS ${totalAmount} for ${cartItems.length} item(s) (${itemNames}) via Paystack.`;
+        await sendSMS('0246414197', adminSmsMessage);
+      } catch (adminSmsErr) {
+        console.error('Payment SMS dispatch to 0246414197 failed:', adminSmsErr);
       }
     }
 
