@@ -47,8 +47,8 @@ export async function POST(request: Request) {
       return sum + (price * item.quantity);
     }, 0);
 
-    const shipping = subtotal > 200 || subtotal === 0 ? 0 : 15;
-    const tax = Math.round(subtotal * 0.08 * 100) / 100;
+    const shipping = 0;
+    const tax = Math.round(subtotal * 0.00 * 100) / 100;
     const totalAmount = Math.round((subtotal + shipping + tax) * 100) / 100;
 
     // Paystack expects amount in minor units (e.g. cents/kobo)
