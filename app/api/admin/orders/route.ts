@@ -49,6 +49,7 @@ export async function GET() {
         size: item.size || null,
         color: item.color || null,
         date: new Date(item.createdAt).toLocaleString(),
+        createdAt: item.createdAt,
         status: item.status
       };
 

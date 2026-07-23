@@ -67,7 +67,7 @@ export default function AdminDashboardHome() {
             setOrders(prev => prev.filter(o => o.id !== orderId));
             if (nextStatus === 'completed') {
               setServedProducts(prev => [
-                { ...orderItem, status: 'completed', date: 'Just now' },
+                { ...orderItem, status: 'completed', date: 'Just now', createdAt: new Date().toISOString() },
                 ...prev
               ]);
             } else if (nextStatus === 'cancelled') {
@@ -85,6 +85,58 @@ export default function AdminDashboardHome() {
       console.error('Update order status error:', err);
     }
   };
+
+  // Compute revenue trend over the last 7 days from db.carts with status 'completed'
+  const getLast7DaysRevenue = () => {
+    const today = new Date();
+    const dayEntries: { date: Date; label: string; fullDate: string; value: number }[] = [];
+    
+    // Create entries for each of the last 7 days (from 6 days ago up to today)
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date(today);
+      d.setDate(d.getDate() - i);
+
+      const dayName = d.toLocaleDateString('en-US', { weekday: 'short' });
+      const monthDay = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      
+      dayEntries.push({
+        date: d,
+        label: dayName,
+        fullDate: monthDay,
+        value: 0
+      });
+    }
+
+    // Match servedProducts (representing completed items from db.carts)
+    servedProducts.forEach(item => {
+      if (item.status !== 'completed') return;
+
+      const itemDate = item.createdAt ? new Date(item.createdAt) : new Date(item.date);
+      if (isNaN(itemDate.getTime())) return;
+
+      dayEntries.forEach(entry => {
+        if (
+          itemDate.getFullYear() === entry.date.getFullYear() &&
+          itemDate.getMonth() === entry.date.getMonth() &&
+          itemDate.getDate() === entry.date.getDate()
+        ) {
+          entry.value += Number(item.totalValue || 0);
+        }
+      });
+    });
+
+    const maxValue = Math.max(...dayEntries.map(e => e.value), 0);
+
+    return dayEntries.map(e => ({
+      label: e.label,
+      fullDate: e.fullDate,
+      value: e.value,
+      pct: maxValue > 0 && e.value > 0 ? `${Math.max(Math.round((e.value / maxValue) * 100), 8)}%` : '0%'
+    }));
+  };
+
+  const revenueTrendData = getLast7DaysRevenue();
+  const total7DayRevenue = revenueTrendData.reduce((acc, curr) => acc + curr.value, 0);
 
   if (isLoading) {
     return (
@@ -527,7 +579,7 @@ export default function AdminDashboardHome() {
           <div className="px-6 py-4 border-b border-zinc-100 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/50">
             <h2 className="text-xs font-extrabold text-zinc-400 dark:text-zinc-400 uppercase tracking-widest">Served Products (Fulfilled)</h2>
           </div>
-          <div className="divide-y divide-zinc-100 dark:divide-zinc-800">
+          <div className="divide-y divide-zinc-100 dark:divide-zinc-800 max-h-[380px] overflow-y-auto">
             <AnimatePresence>
               {servedProducts.map((p, idx) => (
                 <motion.div 
@@ -574,7 +626,7 @@ export default function AdminDashboardHome() {
           <div className="px-6 py-4 border-b border-zinc-100 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/50">
             <h2 className="text-xs font-extrabold text-zinc-400 dark:text-zinc-400 uppercase tracking-widest">Rejected / Flagged Orders</h2>
           </div>
-          <div className="divide-y divide-zinc-100 dark:divide-zinc-800">
+          <div className="divide-y divide-zinc-100 dark:divide-zinc-800 max-h-[380px] overflow-y-auto">
             <AnimatePresence>
               {rejectedProducts.map((p, idx) => (
                 <motion.div 
@@ -618,28 +670,34 @@ export default function AdminDashboardHome() {
       </div>
 
       {/* Sales Revenue Trend (Stretched full-width at the bottom of the page) */}
-      <div className="bg-white dark:bg-zinc-900 border border-zinc-200/50 dark:border-zinc-800 rounded-3xl p-6 shadow-sm flex flex-col justify-between">
-        <div>
-          <h3 className="font-extrabold text-sm text-zinc-800 dark:text-zinc-100 tracking-tight">Sales Revenue Trend</h3>
-          <p className="text-[11px] text-zinc-500 dark:text-zinc-400">Mocked gross sales metrics over the last 5 weeks.</p>
+      <div className="bg-white dark:bg-zinc-900 border border-zinc-200/50 dark:border-zinc-800 rounded-3xl p-6 shadow-sm flex flex-col justify-between gap-4">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+          <div>
+            <h3 className="font-extrabold text-sm text-zinc-800 dark:text-zinc-100 tracking-tight">Sales Revenue Trend</h3>
+            <p className="text-[11px] text-zinc-500 dark:text-zinc-400">Gross completed sales metrics from db.carts over the last 7 days.</p>
+          </div>
+          <div className="bg-emerald-50 dark:bg-emerald-950/30 px-3 py-1.5 rounded-xl border border-emerald-100 dark:border-emerald-900/50">
+            <span className="text-[10px] text-emerald-600 dark:text-emerald-400 block uppercase font-bold tracking-wider">7-Day Revenue</span>
+            <span className="text-sm font-black text-emerald-700 dark:text-emerald-300">GHS {total7DayRevenue.toLocaleString()}</span>
+          </div>
         </div>
         
-        <div className="h-48 flex items-end justify-between gap-6 pt-8 pb-4 px-2 border-b border-zinc-100 dark:border-zinc-800">
-          {[
-            { label: 'Week 23', value: 850, pct: 'h-[35%]', color: 'from-violet-500/80 to-indigo-500/80' },
-            { label: 'Week 24', value: 1200, pct: 'h-[50%]', color: 'from-violet-500/80 to-indigo-500/80' },
-            { label: 'Week 25', value: 1650, pct: 'h-[68%]', color: 'from-violet-500/80 to-indigo-500/80' },
-            { label: 'Week 26', value: 1400, pct: 'h-[58%]', color: 'from-violet-500/80 to-indigo-500/80' },
-            { label: 'Week 27', value: 2420, pct: 'h-[100%]', color: 'from-violet-600 to-indigo-600 dark:from-violet-500 dark:to-indigo-500' }
-          ].map((bar, i) => (
+        <div className="h-52 flex items-end justify-between gap-3 md:gap-6 pt-8 pb-4 px-2 border-b border-zinc-100 dark:border-zinc-800">
+          {revenueTrendData.map((bar, i) => (
             <div key={i} className="flex-1 flex flex-col items-center gap-2 group h-full justify-end">
-              <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-zinc-900 dark:bg-zinc-50 text-white dark:text-zinc-950 text-[10px] font-extrabold py-1 px-2.5 rounded-lg -translate-y-1 shadow-md">
-                GHS {bar.value}
+              <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-zinc-900 dark:bg-zinc-50 text-white dark:text-zinc-950 text-[10px] font-extrabold py-1 px-2.5 rounded-lg -translate-y-1 shadow-md whitespace-nowrap z-10">
+                GHS {bar.value.toLocaleString()}
               </div>
               <div className="w-full flex items-end justify-end h-full min-h-[4px]">
-                <div className={`w-full ${bar.pct} bg-gradient-to-t ${bar.color} rounded-t-xl group-hover:opacity-90 transition-all duration-300 shadow-sm`} />
+                <div 
+                  style={{ height: bar.pct }} 
+                  className="w-full bg-gradient-to-t from-violet-600 to-indigo-600 dark:from-violet-500 dark:to-indigo-500 rounded-t-xl group-hover:opacity-90 transition-all duration-300 shadow-sm" 
+                />
               </div>
-              <span className="text-[10px] font-bold text-zinc-400 dark:text-zinc-500 mt-1">{bar.label}</span>
+              <div className="text-center mt-1">
+                <span className="text-[10px] font-bold text-zinc-700 dark:text-zinc-300 block">{bar.label}</span>
+                <span className="text-[9px] text-zinc-400 dark:text-zinc-500 block">{bar.fullDate}</span>
+              </div>
             </div>
           ))}
         </div>
