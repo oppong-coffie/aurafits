@@ -80,19 +80,19 @@ export async function GET(request: Request) {
       // Send customer confirmation SMS if phone exists
       if (user && user.phone) {
         try {
-          const smsMessage = `Hi ${user.name}, your AuraFits order of ${cartItems.length} item(s) (${itemNames}) has been successfully placed (Paid via Paystack)! We are preparing it for delivery. Thank you!`;
+          const smsMessage = `Hi ${user.name}, your AuraFits order of ${cartItems.length} item(s) (${itemNames}) has been successfully placed! We are preparing it for delivery. Thank you!`;
           await sendSMS(user.phone, smsMessage);
         } catch (smsErr) {
           console.error('Checkout SMS dispatch to customer failed:', smsErr);
         }
       }
 
-      // Also send payment notification SMS to 0246414197
+      // Also send payment notification SMS to 0245442487
       try {
         const adminSmsMessage = `[ORDER ALERT] ${customerName} paid GHS ${totalAmount} for ${cartItems.length} item(s) (${itemNames}) via Aurafits website.`;
-        await sendSMS('0246414197', adminSmsMessage);
+        await sendSMS('0245442487', adminSmsMessage);
       } catch (adminSmsErr) {
-        console.error('Payment SMS dispatch to 0246414197 failed:', adminSmsErr);
+        console.error('Payment SMS dispatch to 0245442487 failed:', adminSmsErr);
       }
     }
 
