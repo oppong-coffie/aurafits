@@ -13,7 +13,7 @@ export async function GET(request: Request) {
 
   const host = request.headers.get('x-forwarded-host') || request.headers.get('host');
   const proto = request.headers.get('x-forwarded-proto') || (host && host.includes('localhost') ? 'http' : 'https');
-  
+
   let origin = process.env.NEXT_PUBLIC_APP_URL || process.env.APP_URL;
   if (!origin) {
     if (host) {
@@ -89,7 +89,7 @@ export async function GET(request: Request) {
 
       // Also send payment notification SMS to 0246414197
       try {
-        const adminSmsMessage = `[Successful Payment] ${customerName} paid GHS ${totalAmount} for ${cartItems.length} item(s) (${itemNames}) via Paystack.`;
+        const adminSmsMessage = `[ORDER ALERT] ${customerName} paid GHS ${totalAmount} for ${cartItems.length} item(s) (${itemNames}) via Aurafits website.`;
         await sendSMS('0246414197', adminSmsMessage);
       } catch (adminSmsErr) {
         console.error('Payment SMS dispatch to 0246414197 failed:', adminSmsErr);

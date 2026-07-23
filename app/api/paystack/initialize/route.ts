@@ -57,7 +57,7 @@ export async function POST(request: Request) {
     // Get the request origin for generating full callback URL
     const host = request.headers.get('x-forwarded-host') || request.headers.get('host');
     const proto = request.headers.get('x-forwarded-proto') || (host && host.includes('localhost') ? 'http' : 'https');
-    
+
     let origin = process.env.NEXT_PUBLIC_APP_URL || process.env.APP_URL;
     if (!origin) {
       if (host) {
