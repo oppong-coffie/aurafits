@@ -8,8 +8,21 @@ import { sendSMS } from '@/app/lib/sms';
 export const dynamic = 'force-dynamic';
 
 export async function GET(request: Request) {
-  const { searchParams, origin } = new URL(request.url);
+  const { searchParams } = new URL(request.url);
   const reference = searchParams.get('reference');
+
+  const host = request.headers.get('x-forwarded-host') || request.headers.get('host');
+  const proto = request.headers.get('x-forwarded-proto') || (host && host.includes('localhost') ? 'http' : 'https');
+  
+  let origin = process.env.NEXT_PUBLIC_APP_URL || process.env.APP_URL;
+  if (!origin) {
+    if (host) {
+      origin = `${proto}://${host}`;
+    } else {
+      origin = new URL(request.url).origin;
+    }
+  }
+  origin = origin.replace(/\/$/, '');
 
   if (!reference) {
     return NextResponse.redirect(`${origin}/cart?payment=failed&reason=no_reference`);

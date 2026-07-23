@@ -55,7 +55,18 @@ export async function POST(request: Request) {
     const amountInCents = Math.round(totalAmount * 100);
 
     // Get the request origin for generating full callback URL
-    const { origin } = new URL(request.url);
+    const host = request.headers.get('x-forwarded-host') || request.headers.get('host');
+    const proto = request.headers.get('x-forwarded-proto') || (host && host.includes('localhost') ? 'http' : 'https');
+    
+    let origin = process.env.NEXT_PUBLIC_APP_URL || process.env.APP_URL;
+    if (!origin) {
+      if (host) {
+        origin = `${proto}://${host}`;
+      } else {
+        origin = new URL(request.url).origin;
+      }
+    }
+    origin = origin.replace(/\/$/, '');
 
     // Reference format: aura_pay_ + timestamp + random token
     const reference = `aura_pay_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`;
